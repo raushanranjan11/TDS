@@ -1,0 +1,1 @@
+{xtype:"panel",title:"Upload Administration",cls:"x-tds-homebox",frame:true,autoHeight:true,items:[{html:"<a href=\"#\" onclick=\"return TDS.workArea.openTab('Load Data ', 'loadData/loadData.js', '', '"+TDS.env.sessionPath+"loadData');\">Load Data </a>"}]}

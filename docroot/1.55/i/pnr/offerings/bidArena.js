@@ -1,0 +1,1 @@
+{xtype:"panel",layout:"fit",border:false,html:'<iframe src="http://www.bid-arena.com/compare/compare.php" style="width: 100%; height: 100%; border: none;"></iframe>'}

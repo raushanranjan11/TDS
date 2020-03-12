@@ -1,0 +1,352 @@
+div.loader {
+  background: #fff;
+  width:      100%;
+  height:     100%;
+  z-index:    10;
+  top:        0;
+  left:       0;
+  position:   fixed;
+}
+
+
+html, body {
+  height:100%;
+}
+
+body{
+  margin: 0px;
+  overflow: hidden;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#8CCCFA', endColorstr='#0773D5'); /* for IE */
+  background: -webkit-gradient(linear, left top, left bottom, from(#8CCCFA), to(#0773D5)); /* for webkit browsers */
+  background: -moz-linear-gradient(top,  #8CCCFA,  #0773D5); /* for firefox 3.6+ */
+  background: -o-linear-gradient(top, #8CCCFA 0%,#0773D5 100%);
+  float:left;
+  position:relative;
+  width:100%;
+  z-index: -5;
+}
+
+
+img.bg {
+  z-index: -10;
+  /* Set rules to fill background */
+  min-height: 100%;
+  min-width: 1024px;
+
+  /* Set up proportionate scaling */
+  width: 100%;
+  height: 80%;
+
+  /* Set up positioning */
+  position: fixed;
+  top: 5%;
+  left: 0;
+  /* Fallback for web browsers that doesn't support RGBa */
+  /*background: rgb(174, 238, 238);
+  /* RGBa with 0.6 opacity */
+  /*background: rgba(174, 238, 238, 0.7); */
+}
+
+  @media screen and (max-width: 1024px){
+  img.bg {
+  left: 50%;
+  margin-left: -512px; }
+}
+
+div.master-header {
+  position:absolute;
+  top: 0px;
+  background-color: #C0DFFC;
+  height: 180px;
+  width: 100%;
+}
+
+div.up-header {
+  height: 25%;
+  background: #999; /* for non-css3 browsers */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#C2E0FC', endColorstr='#7BC7F9'); /* for IE */
+  background: -webkit-gradient(linear, left top, left bottom, from(#C2E0FC), to(#7BC7F9)); /* for webkit browsers */
+  background: -moz-linear-gradient(top,  #C2E0FC,  #7BC7F9); /* for firefox 3.6+ */
+}
+
+div.main-header {
+  height: 55%;
+  background-color: #F1F1F1;
+}
+
+img.logo {
+  height: 100%;
+  width: 100%;
+}
+
+div.bottom-header {
+  position:relative;
+  height: 20%;
+  -webkit-box-shadow: 0px 8px 10px rgba(50, 50, 50, 0.7);
+  -moz-box-shadow:    0px 8px 10px rgba(50, 50, 50, 0.7);
+  box-shadow:         0px 8px 10px rgba(50, 50, 50, 0.7);
+}
+
+img.shadow {
+  height: 100%;
+  width: 100%;
+}
+
+div.master-main {
+  width:100%;
+  height: 100%;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+
+div.conout {
+  position: absolute;
+  top: 29%;
+  left: 33%;
+  width: 530px;
+  height: 490px;
+  /* Fallback for web browsers that doesn't support RGBa */
+  background: rgb(174, 238, 238);
+  /* RGBa with 0.6 opacity */
+  background: rgba(174, 238, 238, 0.7);
+  -webkit-box-shadow: 3px 7px 15px rgba(0, 0, 0, 0.7);
+  -moz-box-shadow:    3px 7px 15px rgba(0, 0, 0, 0.7);
+  box-shadow:         3px 7px 15px rgba(0, 0, 0, 0.7);
+}
+
+div.cinner {
+  position: absolute;
+  top: 6.5%;
+  left: 4.3%;
+  width: 490px;
+  height: 430px;
+  background-color: #fff;
+  -webkit-box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.6);
+  -moz-box-shadow:    0px 5px 15px rgba(0, 0, 0, 0.6);
+  box-shadow:         0px 5px 15px rgba(0, 0, 0, 0.6);
+}
+
+div.shadow {
+  position: absolute;
+  top: 81.3%;
+  left: -14.3%;
+  width: 0px;
+  height: 0px;
+  border-style: solid;
+  border-width: 0 47px 30px 0;
+  border-color: transparent #000  transparent transparent;
+  line-height: 0px;
+  _border-color: #000000 #000 #000000 #000000;
+  _filter: progid:DXImageTransform.Microsoft.Chroma(color='#000000');
+}
+
+.mask
+{
+  overflow: hidden;
+  top: 14%;
+  left: -14.1%;
+  position: absolute;
+}
+
+.loginp
+{
+  width: 530px;
+  height: 290px;
+  background: #999 /* for non-css3 browsers */
+  border-width: 0px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  behavior: url(css/border-radius.htc);
+  -webkit-box-shadow: 9px 4px 20px rgba(0, 0, 0, 0.55);
+  -moz-box-shadow:    9px 4px 20px rgba(0, 0, 0, 0.55);
+  box-shadow:         9px 4px 20px rgba(0, 0, 0, 0.55);
+}
+
+.gradient
+{
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00D3EE', endColorstr='#0168A2'); /* for IE */
+  background: -webkit-gradient(linear, left top, left bottom, from(#00D3EE), to(#0168A2)); /* for webkit browsers */
+  background: -moz-linear-gradient(top,  #00D3EE,  #0168A2); /* for firefox 3.6+ */
+}
+
+img.login{
+  position: absolute;
+  top: 2.3%;
+  left: 21%;
+  width: 290px;
+  height: 45px;
+}
+
+p.label{
+  color: #FFF;
+  font-size: 18px;
+  font-weight: bold;
+  font-family: Arial;
+  font-weight: bold;
+  text-align: left;
+}
+
+div.links {
+  position: absolute;
+  top: 83%;
+  left: 3%;
+  width: 100px;
+  text-align: left;
+}
+
+a.label-links {
+  line-height: 160%;
+  color: #63666B;
+  font-size: 19px;
+  font-weight: bold;
+  font-family: Arial;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+a.label-links:hover {
+  color: #C0C0C0;
+}
+
+button.login-button {
+  width: 67px;
+  height: 37px;
+  border-width: 1px;
+  border-color: #3366CC;
+  cursor: pointer;
+  text-align: center;
+  font-size: 17px;
+  font-family: Arial;
+  font-weight: bold;
+  color: #FFFFFF;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#309AFC', endColorstr='#022951'); /* for IE */
+  background: -webkit-gradient(linear, left top, left bottom, from(#309AFC), to(#022951)); /* for webkit browsers */
+  background: -moz-linear-gradient(top,  #309AFC,  #022951); /* for firefox 3.6+ */
+}
+
+/*button.login-button:hover {
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#022951', endColorstr='#309AFC'); /* for IE */
+  /*background: -webkit-gradient(linear, left top, left bottom, from(#022951), to(#309AFC)); /* for webkit browsers */
+  /*background: -moz-linear-gradient(top,  #022951,  #309AFC); /* for firefox 3.6+ */
+/*}    */
+
+a.terms{
+  color: #FFF;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: Arial;
+  text-decoration: none;
+}
+
+a.terms {
+  color: #F1F1F1;
+}
+
+div.master-footer {
+  position:absolute;
+  width: 100%;
+  height: 3.5%;
+  bottom: 0px;
+  background-color: #FFFFFF;
+  text-align: center;
+  vertical-align: bottom;
+}
+
+img.logo-tds {
+  width: 28px;
+  height: 23px;
+}
+
+label.copyright {
+  font-size: 15px;
+  font-family: Arial;
+}
+
+/* Mask for background */
+div.bgmask {
+  display: none;
+  background: #000000;
+  position: fixed; left: 0; top: 0;
+  width: 100%; height: 100%;
+  opacity: 0.5;
+  filter:alpha(opacity=50);
+  z-index: 20;
+}
+
+div.pop-up {
+  display: none;
+  z-index: 30;
+  position: absolute;
+  padding: 10px;
+  background: #4271C9;
+  width: 550px;
+  height: 405px;
+  border: #C0C0C0;
+  border-width: 5px;
+  border-radius: 5px;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#6292DD', endColorstr='#3B65B5'); /* for IE */
+  background: -webkit-gradient(linear, left top, left bottom, from(#6292DD), to(#3B65B5)); /* for webkit browsers */
+  background: -moz-linear-gradient(top,  #6292DD,  #3B65B5); /* for firefox 3.6+ */
+  background: -o-linear-gradient(top, #6292DD 0%,#3B65B5 100%);
+  -webkit-box-shadow: 7px 7px 5px rgba(50, 50, 50, 0.75);
+  -moz-box-shadow:    7px 7px 5px rgba(50, 50, 50, 0.75);
+  box-shadow:         7px 7px 5px rgba(50, 50, 50, 0.75);
+}
+
+div.countainer-popup {
+  position: absolute;
+  top: 25px;
+  left: 10px;
+  background: #F0F0F0;
+  width: 550px;
+  height: 390px;
+  text-align: center;
+}
+
+img.btnclose {
+  cursor: pointer;
+  float: right;
+  margin: -28px -28px 0 0;
+}
+
+li.support {
+  text-align: left;
+  font-family: Arial;
+  font-weight: bold;
+  font-size: 17px;
+}
+
+div.alert {
+  border-top-width: 30px;
+  display: none;
+  z-index: 40;
+  position: absolute;
+  padding: 10px;
+  background: #4271C9;
+  width: 260px;
+  height: 105px;
+  border: #C0C0C0;
+  border-width: 5px;
+  border-radius: 5px;
+  -webkit-box-shadow: 7px 7px 5px rgba(50, 50, 50, 0.75);
+  -moz-box-shadow:    7px 7px 5px rgba(50, 50, 50, 0.75);
+  box-shadow:         7px 7px 5px rgba(50, 50, 50, 0.75);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#6292DD', endColorstr='#3B65B5'); /* for IE */
+  background: -webkit-gradient(linear, left top, left bottom, from(#6292DD), to(#3B65B5)); /* for webkit browsers */
+  background: -moz-linear-gradient(top,  #6292DD,  #3B65B5); /* for firefox 3.6+ */
+  background: -o-linear-gradient(top, #6292DD 0%,#3B65B5 100%);
+}
+
+div.alert-popup {
+  position: absolute;
+  top: 20px;
+  left: 10px;
+  background: #F0F0F0;
+  width: 260px;
+  height: 100px;
+  text-align: center;
+}

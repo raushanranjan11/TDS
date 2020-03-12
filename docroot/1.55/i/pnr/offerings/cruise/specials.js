@@ -1,0 +1,1 @@
+{xtype:"form",border:false,width:1250,height:500,markDataDirtyOnLoad:true,beforeSubmit:function(a){},beforeDataLoad:function(b,a){return b},items:[{}]}

@@ -1,0 +1,1 @@
+{xtype:"panel",bodyStyle:"padding: 8px;",layout:"fit",html:"<p>Map - To be implemented.</p>"}

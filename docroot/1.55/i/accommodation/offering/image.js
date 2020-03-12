@@ -1,0 +1,1 @@
+{xtype:"form",height:200,fileUpload:true,bodyStyle:"padding: 8px;",items:{xtype:"fieldset",title:"Select image",height:80,items:{xtype:"fileuploadfield",emptyText:"No image selected.",width:320,hideLabel:true,labelSeparator:"",name:"imagePath"}}}

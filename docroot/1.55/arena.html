@@ -1,0 +1,1642 @@
+ <!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head id="ctl00_Head1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+ <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<meta http-equiv="X-UA-Compatible" content="IE=9" />
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10" />
+
+<title>ARENA</title>
+<link rel="stylesheet" type="text/css" href="ext-all.css"/>
+<link rel="stylesheet" type="text/css" href="shared.css"/>
+<link rel="stylesheet" type="text/css" href="arena.css"/>
+<link rel="stylesheet" type="text/css" href="calendar.css"/>
+<link rel="stylesheet" type="text/css" href="superboxselect.css"/>
+
+<script type="text/javascript">
+  													 
+//var sm = new Ext.grid.CheckboxSelectionModel();
+
+var current_full_date=new Date();
+var current_month,current_day,current_year;
+current_year=current_full_date.getFullYear();
+current_month=current_full_date.getMonth();
+current_date=current_full_date.getDate();
+
+	var launcherWindow;
+	function arenaLink(href) {
+		if (this.opener.closed == true) {
+			if (launcherWindow == null || (launcherWindow != null && launcherWindow.closed == true)) launcherWindow = window.open(href, 'launcherTarget');
+			else launcherWindow.location.href = href;
+			launcherWindow.focus();
+		}
+		else {
+			this.opener.location.href = href;
+			this.opener.focus();
+		}
+		return false;
+	}
+
+	function externalLink(href, target) {
+		// TODO: Code required to construct a correct/complete URL to standards
+		// href can be www.blah.com, http://www.blah.com, https://www.blah.com, etc
+		void(window.open(href,target));
+		return false;
+	}
+
+	function arenaLogout() {
+		if (this.opener.closed != true) {
+			this.opener.location.href = '/tds/logout';
+			arenaClose();
+		}
+	}
+	function backToLaunch() {
+		 window.open("/tds");
+  		 
+	}
+	/*function test(a){
+	
+	alert(a);
+	}
+*/
+ 
+	function getCookie(c_name)
+	{
+		var c_value = window.opener.document.cookie;
+		var c_start = c_value.indexOf(" " + c_name + "=");
+		if (c_start == -1)
+		{
+			c_start = c_value.indexOf(c_name + "=");
+		}
+		if (c_start == -1)
+		{
+			c_value = null;
+		}
+		else
+		{
+			c_start = c_value.indexOf("=", c_start) + 1;
+			var c_end = c_value.indexOf(";", c_start);
+			if (c_end == -1)
+			{
+			c_end = c_value.length;
+			}
+			c_value = unescape(c_value.substring(c_start,c_end));
+		}
+		return c_value;
+	}
+
+	function arenaClose() {
+		window.close();
+	}
+
+	var  firstLoad = true;
+	function handleSocialAppDiv(){
+
+				  // document.getElementById('socialAppDiv');
+			if (document.getElementById('socialAppDiv').style.display=="none"){
+				document.getElementById('socialAppDiv').style.display="inline";
+			} else {
+				document.getElementById('socialAppDiv').style.display="none";
+			}
+			if(firstLoad)  {
+			firstLoad = false;
+			makeFrame(getCookie('ARENA_USER_ID'));
+			}
+	   } //right:440px
+
+	function makeFrame(userId) {
+			var  ifrm = document.getElementById("a");
+			ifrm.setAttribute("src", "http://mobiletest.tdsworld.com/FTLapp/index.php?ARENA_USER_ID="+userId);
+			document.getElementById("socialAppDiv").appendChild(ifrm);
+	} 
+	/*
+	*BLINK Function
+	*/
+
+	  function blink() {
+		var blinks = document.getElementsByTagName('blink');
+		for (var i = blinks.length - 1; i >= 0; i--) {
+		  var s = blinks[i];
+		  s.style.visibility = (s.style.visibility === 'visible') ? 'hidden' : 'visible';
+		}
+		window.setTimeout(blink, 1000);
+	  }
+	  if (document.addEventListener) document.addEventListener("DOMContentLoaded", blink, false);
+	  else if (window.addEventListener) window.addEventListener("load", blink, false);
+	  else if (window.attachEvent) window.attachEvent("onload", blink);
+	  else window.onload = blink;
+		/*
+	*BLINK Function END
+	*/
+
+</script>
+</head>
+
+<body >
+<div id="loading-mask" style="position:absolute;left:0;top:0;width:100%;height:100%;z-index:20000;background-color:white;"></div>
+<div id="loading" style="position:absolute; left:45%; top:40%; padding:2px; z-index:20001; height:auto;">
+	<div style="font: bold 12px Trebuchet MS, Tahoma, sans-serif;"><img src="loading.gif" width="32" height="32" style="margin-right:8px;" align="absmiddle"/><span id="loading-msg">Loading...</span></div>
+</div>
+ 														 
+<div id="socialAppDiv" style=" display:none;position:fixed; top:200px; left:20%; right:33%; height: 190px; border:solid;  border-radius:8px;">
+	<div  style="margin-left:99%;margin-top:-17px;"><a href="#" onclick="handleSocialAppDiv(); "><img src="images/close-button.png"></a></div>
+	 <iframe id = 'a' style=" border-radius:8px;  border: none; height: 100%; width: 100%; margin-top:-8px" ></iframe> 
+</div>
+<!-- HIDE SOCIAL MEDIA TEMPERORY -->
+ <div id = 'socialMedia' style="display:none; position:absolute;  top:60px;
+ right:150px; height:20px; width:90px"><a href="#" onclick="handleSocialAppDiv(); "><img style=" border-radius:2px;" src="images/SocialMedia.png"/></a></div> 
+<!-- position:absolute;  top:58px;
+ right:100px; -->
+ <div id = 'Announcements' style="position:absolute;  top:57px;
+ right:20px; height:20px; width:140px"><a href="#" onclick="javascript:backToLaunch(); "><img style=" border-radius:2px;" src="images/TDSArenaAnnouncements.png"/></a></div> 
+ 
+
+<!-- include everything after the loading indicator -->
+<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading Core API...';</script>
+<script type="text/javascript" src="ext-base.js"></script>
+ <script type="text/javascript" src="ext-all-debug.js"></script>
+<!--  <script type="text/javascript" src="ext-all.js"></script>  --> 
+<script type="text/javascript" src="TDS.js"></script>
+<script type="text/javascript" src="Override.js"></script>
+
+<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading Global Data Stores...';</script>
+<script type="text/javascript" src="Ext.Data.js"></script>
+<script type="text/javascript" src="Ext.data.CollectionReader.js"></script>
+<script type="text/javascript" src="Ext.data.CollectionStore.js"></script>
+
+<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading UI Components...';</script>
+<script type="text/javascript" src="TDS.util.js"></script>
+<script type="text/javascript" src="TDS.util.Price.js"></script>
+<script type="text/javascript" src="Ext.AjaxPanel.js"></script>
+<script type="text/javascript" src="Ext.SuperBoxSelect.js"></script>
+<script type="text/javascript" src="Ext.AwesomePanel.js"></script>
+<script type="text/javascript" src="Ext.AwesomeGrid.js"></script>
+<script type="text/javascript" src="Ext.AwesomeRedButton.js"></script>
+<script type="text/javascript" src="Ext.AwesomeSearchGrid.js"></script>
+<script type="text/javascript" src="Ext.AwesomeEditableGrid.js"></script>
+<script type="text/javascript" src="Ext.AwesomeWindow.js"></script>
+<script type="text/javascript" src="Ext.AwesomeHelpWindow.js"></script>
+<script type="text/javascript" src="Ext.AwesomeSplitButton.js"></script>
+<script type="text/javascript" src="Ext.Calendar.js"></script>
+<script type="text/javascript" src="Ext.DataBox.js"></script>
+<script type="text/javascript" src="Ext.Omnicrementer.js"></script>
+<script type="text/javascript" src="Ext.Toolbar.SpecialItems.js"></script>
+<script type="text/javascript" src="Ext.form.FieldLabel.js"></script>
+<script type="text/javascript" src="Ext.form.ClearableComboBox.js"></script>
+<script type="text/javascript" src="Ext.form.AwesomeComboBox.js"></script>
+<script type="text/javascript" src="Ext.form.CustomRedButton.js"></script>
+<script type="text/javascript" src="Ext.form.LocationComboBox.js"></script>
+<script type="text/javascript" src="Ext.form.AirportComboBox.js"></script>
+<script type="text/javascript" src="Ext.LinkButton.js"></script>
+
+<script type="text/javascript" src="Ext.tree.DynamicTreeLoader.js"></script>
+<script type="text/javascript" src="Ext.AwesomeTree.js"></script>
+
+<script type="text/javascript" src="Ext.FileUploadField.js"></script>
+
+<script type="text/javascript" src="Ext.Timer.js"></script>
+<script type="text/javascript" src="Ext.form.TimerLabel.js"></script>
+<script type="text/javascript" src="Ext.TimerMgr.js"></script>
+
+<script type="text/javascript" src="TDS.panel.Price.js"></script>
+<script type="text/javascript" src="TDS.panel.PassengerNameRecord.js"></script>
+<script type="text/javascript" src="TDS.panel.Standard.js"></script>
+<script type="text/javascript" src="TDS.panel.Label.js"></script>
+<script type="text/javascript" src="TDS.panel.Detail.js"></script>
+<script type="text/javascript" src="TDS.panel.PackagePrice.js"></script>
+
+<script type="text/javascript" src="Ext.ux.MonthYearPicker.js"></script>
+<!--<script type="text/javascript" src="Ext.Month.js"></script>  -->
+
+<script type="text/javascript" src="Ext.ux.grid.GridSummary.js"></script>
+
+<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading Session Management...';</script>
+<script type="text/javascript" src="Ext.Session.js"></script>
+
+<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading User Environment...';</script>
+<script type="text/javascript" src="TDS.user.js"></script>
+<script type="text/javascript" src="TDS.heartbeat.js"></script>
+
+<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Initializing...';</script>
+
+<script type="text/javascript">
+if (Ext.isIE || Ext.isOpera || typeof console != 'object') console = {log: function(m) { alert(m.toString()) }};
+
+Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
+
+Ext.BLANK_IMAGE_URL = 'images/s.gif';
+
+Ext.Ajax.defaultHeaders = {'Accept': 'application/json;q=1,*/*;q=0.5'};
+// Ext.Ajax.disableCaching = false;
+
+// For the creation of the tooltips in the grid
+Ext.QuickTips.init();
+var winWidth = window.innerWidth - 45;
+
+var tit = '<table border=0 width="'+winWidth+'px"><tr><td align="right"><font color="#cc0000"><b>View Queues</b></font></td></tr></table>';
+//alert(tit);
+// create global window
+TDS.window = new Ext.AwesomeWindow();
+TDS.helpwindow = new Ext.HelpAwesomeWindow();
+TDS.innerWindow = new Ext.AwesomeWindow({});
+var sm = new Ext.grid.CheckboxSelectionModel({
+checkOnly: false,
+singleSelect: false
+});
+
+var manual = '';
+var manualTotalPrice = null; 
+var data = [];
+var fromDate = '';
+var supplierUri = '';
+var rateUri = '';
+
+changeColumnColor = function(value){
+//console.log(grid);
+//alert('aaaaa   '+ value);
+var ct = Ext.getCmp('ee').getStore().getTotalCount();
+//Ext.getCmp('ee').getView().getCell(1,8).setAttribute('style','background-color:yellow;');//}
+for(var i=0;i<ct;i++){
+if(value == 2){
+Ext.getCmp('ee').getView().getCell(i,8).setAttribute('style','background-color:#87CEFA;');
+Ext.getCmp('ee').getView().getCell(i,7).setAttribute('style','background-color:white;');
+Ext.getCmp('ee').getView().getCell(i,9).setAttribute('style','background-color:white;');
+Ext.getCmp('ee').getView().getCell(i,10).setAttribute('style','background-color:white;');
+}
+if(value == 3){
+Ext.getCmp('ee').getView().getCell(i,9).setAttribute('style','background-color:#87CEFA;');
+Ext.getCmp('ee').getView().getCell(i,10).setAttribute('style','background-color:white;');
+Ext.getCmp('ee').getView().getCell(i,7).setAttribute('style','background-color:white;');
+Ext.getCmp('ee').getView().getCell(i,8).setAttribute('style','background-color:white;');
+}
+if(value == 4){
+Ext.getCmp('ee').getView().getCell(i,10).setAttribute('style','background-color:#87CEFA;');
+Ext.getCmp('ee').getView().getCell(i,9).setAttribute('style','background-color:white;');
+Ext.getCmp('ee').getView().getCell(i,8).setAttribute('style','background-color:white;');
+Ext.getCmp('ee').getView().getCell(i,7).setAttribute('style','background-color:white;');
+
+}
+if(value == 1){
+Ext.getCmp('ee').getView().getCell(i,7).setAttribute('style','background-color:#87CEFA;');
+Ext.getCmp('ee').getView().getCell(i,8).setAttribute('style','background-color:white;');
+Ext.getCmp('ee').getView().getCell(i,9).setAttribute('style','background-color:white;');
+Ext.getCmp('ee').getView().getCell(i,10).setAttribute('style','background-color:white;');
+
+}
+}
+
+																														
+}
+
+
+// generic error message box
+TDS.errorMessage = function (s) {
+	if (!s) s = 'An error occored while requesting data.';
+	Ext.Msg.show({
+		title: 'Error',
+		msg: s,
+		buttons: Ext.Msg.OK,
+		icon: Ext.MessageBox.ERROR
+	});
+}
+// common help window popper..
+TDS.needHelp = function (titel,sourceId){
+	TDS.helpwindow.setWindow({
+		sourceDataURI: 'help/'+sourceId,
+		buttonOK : false,
+		modal : false,
+		title: titel,
+		interfaceURI: 'help/preview.js' 
+	});
+}
+TDS.test = function a2z(a1){
+	alert(a1);
+}
+// global functions for application
+TDS.app = {
+
+	getNewMessages: function (heartBeatdate) {
+		Ext.getCmp('applicationMessage').getNewMessages(heartBeatdate);
+		// clear the new messages label and counter
+		var labelNewMessages = Ext.getCmp('applicationHeaderRightColumn').items.itemAt(0);
+		labelNewMessages.setText('');
+		TDS.env.user.resetNewMessageCount();
+		return false;
+	},
+	setMessageTitle: function (message) {
+		//Ext.getCmp('applicationMessage').setCollapsedTitle(message);
+	},
+	openTab: function (tabTitle, interfaceURI, dataURI, sessionURI, groupURI) {
+	 
+		TDS.workArea.openTab(tabTitle, interfaceURI, dataURI, sessionURI, groupURI);
+		return false;
+	},
+	homeTab: {
+		supplierDetails: function () {
+		//console.log('%%%%%%%%%%%%%%%');
+		//console.log(TDS.env.user);
+			if (!TDS.env.user.getSupplierURI()) return false;
+		//	console.log('$$$$$$$$$$$$$$$$$$');
+			TDS.workArea.openTab('Supplier details', 'supplier/supplier.js', TDS.env.user.getSupplierURI(), TDS.env.sessionPath + 'supplier');
+			return false; // important, cancels browser default behaviour
+		},
+		agencyDetails: function () {
+	  		if (!TDS.env.user.getAgencyURI()) return false;
+			TDS.workArea.openTab('Agency details', 'agency/agency.js', TDS.env.user.getAgencyURI(), TDS.env.sessionPath + 'agency');
+			return false; // important, cancels browser default behaviour
+		},
+		paymentDetails: function () {
+	  		//if(!TDS.env.user.getAgencyURI()) return false;
+			TDS.workArea.openTab('Payment Report', 'fulfillment/payment.js', TDS.env.user.getAgencyURI(), TDS.env.sessionPath + 'agency');
+			return false; // important, cancels browser default behaviour
+		}
+	}
+};
+
+TDS.openWindow=function openWindow(){
+	TDS.window.setWindow({
+							title: 'Announcements',
+							interfaceURI: 'announcements.js',
+							// sourceDataURI: dataURI + '/additionalInfo',
+							 //destinationDataURI: dataURI + '/additionalInfo'
+						});
+}
+
+// work area tab panel
+TDS.workArea = new Ext.TabPanel({
+	id: 'applicationWorkArea',
+	region: 'center',
+	activeTab: 0,
+	enableTabScroll: true,
+	layoutOnTabChange: true,
+	openTabs: [],
+	// save state of tabs
+
+	config:{card:'',option:''},
+	
+	tabStateSave: function() {
+		// save state
+	//	console.log('$$$$$$$$$$$$$$$$$$$');
+	//console.log(this.openTabs);
+		Ext.state.Manager.set('openTabs', Ext.state.Manager.getProvider().encodeValue(this.openTabs));
+	},
+	// retrieve state of tabs
+	tabStateGet: function() {
+		var ot =  Ext.state.Manager.getProvider().decodeValue(Ext.state.Manager.get('openTabs'));
+		if (typeof ot == 'undefined') return false;
+		else return ot;
+	},
+	openTab: function(tabTitle, interfaceURI, dataURI, sessionURI, groupURI) {
+	console.log('**********');
+	console.log(dataURI);
+	console.log(groupURI);
+	console.log(sessionURI);
+	console.log(interfaceURI);
+ 
+		if (!tabTitle) tabTitle = interfaceURI + dataURI;
+
+ 
+		// attempt to find the tab if it is already opened
+		var tab = this.findById(interfaceURI + dataURI);
+	//	console.log(tab);
+	//	console.log(!tab);
+		// check if tab does not exist, create it
+		if (!tab) {
+			tab = this.createTab({
+				title: tabTitle,
+				interfaceURI: interfaceURI,
+				dataURI: dataURI,
+				sessionURI: sessionURI,
+				groupURI: groupURI
+			});
+		}
+		else{
+			tab.setTitle(tabTitle)
+		}
+		this.setActiveTab(tab);
+		return false; // important, cancels browser default behaviour
+	},
+	openAnnounementTab: function(tabTitle, interfaceURI, dataURI, sessionURI, groupURI, gid,groupName) {
+
+ 
+		if (!tabTitle) tabTitle = interfaceURI + dataURI;
+
+ 
+		// attempt to find the tab if it is already opened
+		var tab = this.findById(interfaceURI + dataURI);
+		 
+		// check if tab does not exist, create it
+		if (!tab) {
+			tab = this.createTab({
+				title: tabTitle,
+				interfaceURI: interfaceURI,
+				dataURI: dataURI,
+				sessionURI: sessionURI,
+				groupURI: groupURI,
+				gid:gid,
+				groupName:groupName
+			});
+		}
+		else{
+			tab.setTitle(tabTitle)
+		}
+		tab.gid=gid;
+		tab.groupName=groupName;
+		this.setActiveTab(tab);
+		return false; // important, cancels browser default behaviour
+	},
+	openFulfillmentPaymentTab: function(tabTitle, interfaceURI, dataURI,sessionURI) {
+	if (!tabTitle) tabTitle = interfaceURI + dataURI;
+ 		// attempt to find the tab if it is already opened
+		var tab = this.findById(interfaceURI + dataURI);
+		 
+		// check if tab does not exist, create it
+		if (!tab) {
+			tab = this.createTab({
+				title: tabTitle,
+				interfaceURI: interfaceURI,
+				dataURI: dataURI,
+				sessionURI: sessionURI,
+ 			});
+		}
+		else{
+			tab.setTitle(tabTitle)
+		}
+ 		this.setActiveTab(tab);
+		return false; // important, cancels browser default behaviour
+	},
+	openTabLocal: function(tabTitle, interfaceURI, dataURI, sessionURI, groupURI) {
+	//console.log(tabTitle);
+	//console.log('*************');
+		if (!tabTitle) tabTitle = interfaceURI + dataURI;
+		// attempt to find the tab if it is already opened
+		var tab = this.findById(interfaceURI + dataURI);
+		// check if tab does not exist, create it
+		if (!tab) {
+			tab = this.createTab({
+				title: tabTitle,
+				interfaceURI: interfaceURI,
+				dataURI: dataURI,
+				dataPathURI: 'd/',
+				sessionURI: sessionURI,
+				groupURI: groupURI
+			});
+		}
+		this.setActiveTab(tab);
+	},
+	isTabReady: function (interfaceURI, dataURI) {
+		var tab = this.findById(interfaceURI + dataURI);
+		if (tab) {
+			// check if the ajaxpanel is ready
+			var ap = tab.items.itemAt(0);
+			if (ap.isReady()) return true;
+		}
+		return false;
+	},
+	createTab: function (o) {
+		o.dataPathURI = o.dataPathURI ? o.dataPathURI : TDS.env.dataPath;
+		var tab = this.add({
+			id: o.interfaceURI + o.dataURI,
+			title: o.title,
+			layout: 'fit',
+			dataURI: o.dataURI,
+			interfaceURI: o.interfaceURI,
+			sessionURI: o.sessionURI,
+			groupURI: o.groupURI,
+			closable: true,
+			items: new Ext.AjaxPanel({
+				autoLoadPanel: false,
+				dataURI: o.dataURI,
+				dataPathURI: o.dataPathURI,
+				interfaceURI:o.interfaceURI,
+				sessionURI: o.sessionURI,
+				groupURI: o.groupURI
+			})
+		});
+		return tab;
+	},
+	getTab: function (interfaceURI, dataURI) {
+		var tab = this.findById(interfaceURI + dataURI);
+		if (tab) return tab;
+		return false;
+	},
+	listeners: {
+		tabchange: function (tp, p) {
+			// debugger;
+			var ap = p.items.itemAt(0);
+			if (!ap.initiatedLoad) ap.initLoad();
+		},
+		beforerender: function (c) {
+			// get open tabs state
+			var ot = c.tabStateGet();
+			if (!ot) return;
+			for (var i = 0; i < ot.length; i++) {
+				// discard undefined entries
+				if (typeof ot[i] == 'undefined') continue;
+				this.createTab(ot[i]);
+			}
+		},
+		add: function (c, tp, index) {
+			// ignore static / pre-defined tabs
+			//console.log(tp);
+			if (tp.id == 'tabHome') return;
+			c.openTabs.push({title: tp.title, interfaceURI: tp.interfaceURI, dataURI: tp.dataURI, sessionURI: tp.sessionURI, groupURI: tp.groupURI});
+			// save state of tabs
+			c.tabStateSave();
+		},
+		remove: function (c, tp) {
+			// interate through openTabs array and locate the tab to removes
+			for (var i = 0; i < c.openTabs.length; i++) if (c.openTabs[i].interfaceURI == tp.interfaceURI) break;
+			c.openTabs.splice(i, 1);
+			// save state of tabs
+			c.tabStateSave();
+		}
+	},
+	items: [{
+		id: 'tabHome',
+		title: ' Home ',
+		layout: 'fit',
+		closable: false,
+		items: new Ext.AjaxPanel({
+			sessionURI: TDS.env.sessionPath + 'home',
+			interfaceURI: 'home.js'
+		})
+	}]
+});
+	   
+// application viewport
+TDS.viewPort = new Ext.Viewport({
+	layout: 'border',
+	defaults: {
+		border: false
+	},
+	items: [
+		// header
+		{
+			id: 'applicationHeader',
+			region: 'north',
+			border: false,
+			layout: 'column',
+			height: 84,
+			defaults: {
+				xtype: 'panel',
+				border: false
+			},
+			items: [
+				// column one
+				{
+					columnWidth: .15,
+					cls: 'tdsHeaderLeftColumn',
+					height: 84,
+					html: [
+						'<div style="position:fixed; top:0; left:50px; right:50px; height: 90px;">',
+						//'<h1>Travel Distribution Systems Pty Ltd</h1>',          position:fixed; top:0; left:250px; right:450px; height: 90px;
+						//	'<iframe style="  border: none; height: 100%; width: 100%;" src="http://demo.tdsarena.com/FTL-app/index.html"></iframe> ',
+						//'<img src="images/share.png"/> ',
+						'</div>'
+					]
+				},{
+				columnWidth: .15,
+				html:"<div  style = ' font-size: 30px; text-shadow: 5px 5px 10px #8e0505; font-weight: bold;padding-top:40px;'>Cruise</div>",
+				
+				},
+				// column two
+				{
+					columnWidth: .70,
+					id: 'applicationHeaderRightColumn',
+					width: 450,
+					defaultType: 'label',
+					items: [
+						{ /* label new messages */ },
+						{ /* label background job */ },
+						{ /* label logout */ },
+								
+						
+						{
+							xtype: 'panel',
+							cls: 'x-tds-login-status',
+							hidden: true,
+							layout: 'table',
+							border: false,
+							layoutConfig: {
+								columns: 2
+							},
+							items: [   
+								{
+									xtype: 'label',
+									cellCls: 'x-tds-login-text'
+								},
+								{
+									cellCls: 'x-tds-logout-btn',
+									xtype: 'button',
+									text: 'Logout',
+									handler: arenaLogout,
+									scope: window
+								}/*,{
+									xtype: 'label', 
+									html: '&nbsp;'
+								},{
+									xtype: 'label' 
+								},{
+									xtype: 'label',
+									cellCls: 'x-tds-login-text'
+								},{
+									cellCls: 'x-tds-logout-btn',
+									xtype: 'button',
+									text: 'Announcements',
+									handler: backToLaunch,
+									scope: window
+								} */
+							]
+						} 
+					],
+					listeners: {
+						render: function () {
+							var labelNewMessages = this.items.itemAt(0);
+							var labelBackgroundJob = this.items.itemAt(1);
+							var labelLoggedOut = this.items.itemAt(2);
+							var panelLoginStatus = this.items.itemAt(3);
+							var labelLogin = panelLoginStatus.items.itemAt(0);
+
+							// active session
+							TDS.env.heartbeat.on('sessionlogin', function (o) {
+								
+								var lastHeartbeatTime=o.lastHeartbeatTime;
+						 
+								// update new messages label
+								if (o.numberOfNewMessages) {
+									var totalNewMessageCount = TDS.env.user.addNewMessageCount(o.numberOfNewMessages);
+									labelNewMessages.setText('<p style="text-align: right; margin-top: 6px; padding: 0 16px 0; "><blink><b>' + totalNewMessageCount + '</b> new messages, <a href="" onclick="return TDS.app.getNewMessages('+lastHeartbeatTime+');"><font color="#cc0000"> click here</font></a> to view new messages.</blink></p>', false);
+								}
+								// update background job label
+								if (o.numberOfJobs) labelBackgroundJob.setText('<p style="text-align: right; margin-top: 6px; padding: 0 16px 0; "><blink><b><font color="#cc0000">' + o.numberOfJobs + '</b> background jobs running.</font></blink></p>', false);
+								else labelBackgroundJob.setText('');
+								// update login status label
+								var labelLoginText = '<font size="2px;">You are logged-in as <b>' + o.fullName + '</b><font>';
+								if (o.agencyName) labelLoginText += ', ' + o.agencyName;
+								else if (o.supplierName) labelLoginText += ', ' + o.supplierName;
+								labelLogin.setText(labelLoginText, false);
+								// show the login status panel
+								panelLoginStatus.show();
+							}, this);
+
+							// expired session
+							TDS.env.heartbeat.on('sessionexpire', function (o) {
+								// clear all header labels
+								labelNewMessages.setText('');
+								labelBackgroundJob.setText('');
+								// update the login label and message title to inform user their session has expired  padding-bottom:80px;
+								labelLoggedOut.setText('<p style="text-align: right; margin-top: 6px; padding: 0 16px 0; "><blink>You are no longer logged in, <a href="" onclick="arenaClose();">click here</a> to close this window and log back in.</blink></p>', false);
+								TDS.app.setMessageTitle('You are no longer logged in.');
+								// hide the login status panel
+								panelLoginStatus.hide();
+							}, this);
+						}
+					}
+				}
+			]
+		},
+		// work area and messages
+		{
+			region: 'center',
+			layout: 'border',
+			items: [
+				// work area tabs
+				TDS.workArea,
+				// messages
+				{
+					id: 'applicationMessage',
+					region: 'south',
+					//title: ' <table border=0 width="98%"><tr><td align="right"><font color="#cc0000"><b>Queues</b></font></td></tr></table>',
+					title: '  <font color="#cc0000"><b>Queues</b></font> ',
+					layout: 'fit',
+					//collapsedTitle :'<table border=0 width="'+winWidth+'px"><tr><td align="right"><font color="#cc0000"><b>View Queues</b></font></td></tr></table>',
+					collapsedTitle :tit,
+					collapsed: true,
+					collapsible: true,
+					enableCollapsedTitle: true,
+					height: 250,
+					minHeight: 250,
+					highlightInterval: 10000,
+					setCollapsedTitle: function (title) {
+						if (!this.collapsed) return;
+						var titleEl = Ext.get(this.el.dom.nextSibling);
+						var titleMessageEl = Ext.get(this.el.dom.nextSibling.firstChild.firstChild);
+						titleMessageEl.sequenceFx().slideOut('b', { remove: false }).update(title).slideIn('b', {
+							remove: false,
+							callback: function () {
+								titleEl.highlight("ffff9c", { duration: 2 });
+								this.collapsedTitle = title;
+								// create an interval to highlight the title
+								this.highlightTitleIntervalID = setInterval(this.highlightTitle.createDelegate(this), this.highlightInterval);
+							},
+							scope: this
+						});
+					},
+					highlightTitle: function (component) {
+						var titleEl = Ext.get(this.el.dom.nextSibling);
+						if (titleEl) titleEl.highlight("ffff9c", { duration: 2 });
+					},
+					hasHighlight: function () {
+						return this.highlightTitleIntervalID || false;
+					},
+					clearHightlight: function () {
+						clearInterval(this.highlightTitleIntervalID);
+					},
+					clearCollapsedTitle: function () {
+						// check if title has an active hightlight, clear it
+						if (this.hasHighlight()) this.clearHightlight();
+						var titleMessageEl = Ext.get(this.el.dom.nextSibling.firstChild.firstChild);
+						titleMessageEl.update();
+						delete this.collapsedTitle;
+					},
+					hasCollapsedTitle: function () {
+						return  this.collapsedTitle ? true : false;
+					},
+					getNewMessages: function (lastHeartbeatTime) {
+					 
+						var ag = this.items.itemAt(0);
+						ag.setQueryParams({
+							//dateFrom: TDS.env.user.getMessageLastDate().clearTime(),
+							dateFrom:new Date(lastHeartbeatTime).clearTime(),
+							dateTo: new Date(),
+						 	showOnly: 50
+						});
+						ag.submitQuery(true);
+					},
+					items: {
+						xtype: 'awesomegrid',
+						autoSubmit: false,
+						cls: 'custom-dirty',
+						searchURI: TDS.env.dataPath + 'myuser/messages',
+						sessionURI: TDS.env.sessionPath + 'myuser/messages',
+						autoHeight: false,
+						 hideHeaders: true,
+						//border: false,
+						store: new Ext.data.JsonStore({
+							url: '',
+							id: 'dataURI',
+							fields: ['dataURI', 'activityTime', 'type', 'reminders','changeDescription','paybyDate', 'offeringNameString', 'passengerNameRecordComponentURI', 'passengerNameRecordURI', 'statusBefore', 'statusAfter', 'passengerNameRecordPrimaryPaxString', 'passengerNameRecordComponentDateFrom', 'passengerNameRecordComponentPaxDescriptionShortString','componentType','altOffering','messageRead','actioned','updatedByUserURI','lastUpdatedDate','updatedByUserFullName','messageForAgency', 'supplierName', 'agencyName']
+						}),
+						tbar: [
+						' ',
+						{
+							xtype: 'checkbox',
+							name: 'actionTypeCheckbox',
+							listeners: {
+								check: function (t, checked) {
+									var actionTypeField = this.ownerCt.items.itemAt(4);
+									checked ? actionTypeField.enable() : actionTypeField.disable().clearValue();
+								}
+							}
+						},
+						' ',
+						'Actions:',
+						{
+							xtype: 'combo',
+							name: 'actionType',
+							disabled: true,
+							mode: 'local',
+							width: 140,
+							triggerAction: 'all',
+							editable: false,
+							displayField: 'text',
+							valueField: 'value',
+							store: TDS.data.messageActionTypes
+						},
+						' ',
+						{
+							xtype: 'checkbox',
+							name: 'noteTypeCheckbox',
+							listeners: {
+								check: function (t, checked) {
+									var noteTypeField = this.ownerCt.items.itemAt(9);
+									checked ? noteTypeField.enable() : noteTypeField.disable().clearValue();
+								}
+							}
+						},
+						' ',
+						'Notes:',
+						{
+							xtype: 'combo',
+							disabled: true,
+							name: 'noteType',
+							mode: 'local',
+							width: 100,
+							triggerAction: 'all',
+							editable: false,
+							displayField: 'text',
+							valueField: 'value',
+							store: TDS.data.messageNoteTypes
+						},
+						' ',
+						'Date from:',
+						{
+							xtype: 'datefield',
+							name: 'dateFrom',
+							enableKeyEvents: true,
+							showToday: false,
+							excludeFromSession: true,
+							width: 80,
+							format: 'dMy',
+							//maxValue: new Date(),
+							minValue: '01/01/06'
+						},
+						' ',
+						'Date To:',
+						{
+							xtype: 'datefield',
+							name: 'dateTo',
+							enableKeyEvents: true,
+							showToday: false,
+							excludeFromSession: true,
+							width: 80,
+							format: 'dMy',
+							//maxValue: new Date(),
+							minValue: '01/01/06'
+						},
+						' ',
+						' ', 
+						'Show:',
+						{
+							xtype: 'combo',
+							name: 'showOnly',
+							mode: 'local',
+							width: 60,
+							triggerAction: 'all',
+							editable: false,
+							store: ['10', '20', '50']
+						},
+						' ',
+						'Queue:',
+						{
+							xtype: 'combo',
+							name: 'queue',
+						//	disabled: true,
+							mode: 'local',
+							width: 90,
+							triggerAction: 'all',
+							excludeFromSession: true,
+							editable: false,
+							displayField: 'text',
+							valueField: 'value',
+							store: TDS.data.messageQueueTypes
+						},
+						' ',
+						{
+							xtype: 'label',
+							text: 'Consultant: ',
+							id:'consultant_agency_user_text',
+							hidden: false
+						},
+					/*	{
+						html: 'Consultant:',
+						border: false,
+						hideBorders: false,
+						id:'consultant_agency_user_text',
+						width: 110
+					},*/
+						{
+							xtype: 'combo',
+						//	fieldLabel: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name',
+							name: 'consultant',
+							//fieldLabel: 'Consultant: ',
+							id:'consultant_agency_user',
+							mode: 'local',
+							hidden: false,
+							width: 120,
+							triggerAction: 'all',
+							editable: false,
+							emptyText: 'All',
+							excludeFromSession: true,
+							displayField: 'fullNameString',
+							valueField: 'dataURI',
+						    store: TDS.user.agencyUsers
+						//	appendData: [{fullNameString: 'ALL', dataURI: ''}]
+						
+							 
+						},
+						' ',
+						' ',
+  						{
+							xtype:'checkbox',
+							name:'archived',
+							boxLabel:'Show only Archived',
+							handler: function () {
+								//debugger;
+									var tb = this.ownerCt.ownerCt.topToolbar;
+									//tb.items.itemAt(21).disable(true);
+									if(this.checked)	  {
+										tb.items.itemAt(32).setText("Recall");
+									}
+									else
+									{
+										tb.items.itemAt(32).setText("Archive");
+									}
+									 
+								}
+						},
+						'->',
+						{
+
+							xtype: 'button',
+							text: 'Actioned',
+ 							handler: function () {
+								debugger;
+					 
+							 	var grid = this.ownerCt.ownerCt;
+								var a = grid.getSelections();
+								var dataURI = a[0].data.dataURI;
+								if(!dataURI)return;
+						 
+								if(!a[0].data.reminders){
+									if(TDS.env.user.isAgencyUser()){
+										if(!a[0].data.messageForAgency){
+ 										return;
+										}
+									 }else if(TDS.env.user.isSupplier()){
+										 if(a[0].data.messageForAgency){
+											return;
+										 }
+									 }
+
+									}
+
+								TDS.window.setWindow({
+									title: "Action",
+									message: 'Confirm that the message has been actioned ?',
+									destinationDataURI: 'myuser/'+dataURI+'?actioned=true',
+ 									callback: {
+										fn: function (s) {
+											if (s) grid.submitQuery(true);
+										},
+										scope: grid
+									}
+								}); 
+
+							}
+
+						},
+						' ',
+						{
+
+							xtype: 'button',
+							text: 'Archive',
+							disabled:true,
+ 							handler: function () {
+								//debugger;
+ 								var grid = this.ownerCt.ownerCt;
+								var a = grid.getSelections();
+								var dataURI = a[0].data.dataURI;
+								if(!dataURI)return;
+						 
+									if(!a[0].data.reminders){
+									if(TDS.env.user.isAgencyUser()){
+										if(!a[0].data.messageForAgency){
+ 											return;
+										}
+									 }else if(TDS.env.user.isSupplier()){
+										 if(a[0].data.messageForAgency){
+											return;
+										 }
+									 }
+									 }
+								var header =  this.getText();
+								var archiveOrUnarchive = !(grid.topToolbar.items.itemAt(28).checked);
+								TDS.window.setWindow({
+									title: header,
+									message: 'Are you sure you want to '+header+' ?',
+									destinationDataURI: 'myuser/'+dataURI+ '/archivedUnArchived',
+									data: {
+										archived: archiveOrUnarchive
+									},
+									callback: {
+										fn: function (s) {
+											if (s) grid.submitQuery(true);
+										},
+										scope: grid
+									}
+								});
+
+							}
+
+						},
+						{
+							xtype:'button',
+							text:'Print',
+							winExist: false,
+							a:'',
+							handler:function(){
+									debugger;
+								
+								var tb=this.ownerCt.ownerCt.getTopToolbar();
+								var date1=tb.items.itemAt(12).getValue().format(TDS.env.dateFormat);
+								var date2=tb.items.itemAt(15).getValue().format(TDS.env.dateFormat);
+								var dateFrom = TDS.util.Format.dateSpecial(date1, TDS.env.dateFormatDisplay);
+								var dateTo = TDS.util.Format.dateSpecial(date2, TDS.env.dateFormatDisplay);
+					
+
+								var dates='<table  cellspacing="0" style="width:100%;"><tr><th align="left" colspan="3" width="100%"><font size="2">Queues '+dateFrom +' to ' +dateTo+'</font></th></tr></table>'
+
+								var store=this.ownerCt.ownerCt.getStore();
+								var records=store.data.items;
+								if(!this.winExist){
+								this.winExist =true;
+								var a = window.open(
+									'','Terms Priview','height=500,width=1800,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no,status=yes');
+								var queues='';
+								for (var i = 0; i < records.length; i++) {
+									var type=records[i].data.type;
+									var activityTime=records[i].data.activityTime;
+									var messageForAgency=records[i].data.messageForAgency;//sent or received
+									var passengerNameRecordURI=records[i].data.passengerNameRecordURI;
+									var componentType=records[i].data.componentType;
+									var passengerNameRecordComponentDateFrom=records[i].data.passengerNameRecordComponentDateFrom;
+									var passengerNameRecordPrimaryPaxString=records[i].data.passengerNameRecordPrimaryPaxString;
+									var paybyDate=records[i].data.paybyDate;
+									var changeDescription=records[i].data.changeDescription;
+									var supplierName=records[i].data.supplierName;
+									var actioned=records[i].data.actioned;
+									var lastUpdatedDate=records[i].data.lastUpdatedDate;
+									var updatedByUserFullName=records[i].data.updatedByUserFullName;
+
+									var reminders=records[i].data.reminders;
+									var passengerNameRecordComponentPaxDescriptionShortString=records[i].data.passengerNameRecordComponentPaxDescriptionShortString;
+									var agencyName=records[i].data.agencyName;
+
+									/*
+									*Operation
+									*/
+										var mForAgency="";
+										 if(reminders){
+											  mForAgency='Reminders';
+										 } else if(TDS.env.user.isAgencyUser()){
+											if(!messageForAgency){   mForAgency='Sent'; }else{   mForAgency='Received'; }
+										 }else{
+											 if(messageForAgency){   mForAgency='Sent'; }else{   mForAgency='Received'; }
+										 }
+
+									   var passengerNameRecordUR= passengerNameRecordURI.substring(4);
+									   var passengerNameRecordComponentDateFroms= TDS.util.Format.dateSpecial(passengerNameRecordComponentDateFrom, TDS.env.dateFormatDisplay);
+									   	var paxShortString = passengerNameRecordComponentPaxDescriptionShortString;
+										var s = '';
+										if (passengerNameRecordPrimaryPaxString) s += passengerNameRecordPrimaryPaxString;
+										if (passengerNameRecordPrimaryPaxString && paxShortString) s += ' ';
+										if (paxShortString) s += '(' + paxShortString + ')';
+	
+										var paybyDates=TDS.util.Format.dateSpecial(paybyDate, TDS.env.dateFormatDisplay);
+
+										var changeDescriptions="";
+										 if(reminders){
+											  changeDescriptions=changeDescription+' due';
+										 }else{
+											changeDescriptions=changeDescription;
+										}
+ 
+										 var agencySupplier="";
+										 var agency = agencyName;
+										 var supplier = supplierName;
+										 if(reminders){
+											 agencySupplier= '';
+										 }else if(TDS.env.user.isAgencyUser()){
+											if(!messageForAgency){ agencySupplier= supplier; }else{ agencySupplier= agency; }
+										 }else{
+											 if(messageForAgency){ agencySupplier= supplier; }else{ agencySupplier= agency; }
+										 }
+										
+										 if(actioned)actions= '<b><font color="#ff0033">Actioned</font>';
+											else actions= '';
+ 									 
+										queues+='<tr><td width="8%" align="center"><font size="2">'+activityTime+'</font></td> <td width="4%" align="center"><font size="2">'+mForAgency+'</font></td><td width="4%" align="center"><font size="2">'+passengerNameRecordUR+'</font></td><td width="8%" align="center"><font size="2">'+componentType+'</font></td><td width="4%" align="center"><font size="2">'+passengerNameRecordComponentDateFroms+'</font></td><td width="14%" align="center"><font size="2">'+s+'</font></td><td width="8%" align="center"><font size="2">'+paybyDates+'</font></td><td width="8%" align="center"><font size="2">'+changeDescriptions+'</font></td><td width="8%" align="center"><font size="2">'+agencySupplier+'</font></td><td width="8%" align="center"><font size="2">'+actions+'</font></td><td width="10%" align="center"><font size="2">'+lastUpdatedDate+'</font></td><td width="10%" align="center"><font size="2">'+updatedByUserFullName+'</font></td></tr>'
+									}
+									var t='<table  cellspacing="0" border=1 style="width:100%;border-style:solid;">'+queues+'</table> '; 
+									a.document.write(dates+t);
+									a.location.reload();
+									a.focus();
+									a.print();
+									a.close();
+									this.winExist=false;
+								}else{
+									a.focus();
+								}
+							}
+						}],
+						cm: new Ext.grid.ColumnModel([
+							{dataIndex: 'type', renderer: function renderMsgType(v, cell, record, rowIndex, columnIndex, store) {
+								// check if type is of "note" and is directed to the agent user
+								if (v == TDS.data.componentActivityLogType.REQUEST_NOTE_TO_AGENT || v == TDS.data.componentActivityLogType.BOOKING_NOTE_TO_AGENT || v == TDS.data.componentActivityLogType.CANCELLATION_NOTE_TO_AGENT) {
+									if (TDS.env.user.isAgencyUser()) cell.css = 'x-tds-cell-note-recv';
+									else if (TDS.env.user.isSupplier()) cell.css = 'x-tds-cell-note-sent';
+								}
+								// check if type is of "note" and is directed to the supplier
+								else if (v == TDS.data.componentActivityLogType.REQUEST_NOTE_TO_SUPPLIER || v == TDS.data.componentActivityLogType.BOOKING_NOTE_TO_SUPPLIER || v == TDS.data.componentActivityLogType.CANCELLATION_NOTE_TO_SUPPLIER) {
+									if (TDS.env.user.isAgencyUser()) cell.css = 'x-tds-cell-note-sent';
+									else if (TDS.env.user.isSupplier()) cell.css = 'x-tds-cell-note-recv';
+								}
+								// check if type is of a "self" note
+								else if (v == TDS.data.componentActivityLogType.REQUEST_NOTE || v == TDS.data.componentActivityLogType.BOOKING_NOTE || v == TDS.data.componentActivityLogType.CANCELLATION_NOTE) {
+									cell.css = 'x-tds-cell-note';
+								}
+								// other
+								else {
+									cell.css = "x-tds-cell-info";
+								}
+							}, width: 20, fixed: true},
+							{header: 'Date', dataIndex: 'activityTime', width: 100, fixed: true, renderer:		TDS.util.Format.dateSpecialRenderer(TDS.env.dateTimeFormatDisplay)},
+							{header: 'Sent/Received', dataIndex: 'messageForAgency', width: 85, fixed: true,
+								renderer: function (value, cell, record) {
+								var reminders = record.get('reminders');
+						 
+							if(reminders){
+								return 'Reminders';
+							}
+									 if(TDS.env.user.isAgencyUser()){
+ 										if(!value){ return 'Sent'; }else{ return 'Received'; }
+									 }else{
+										 if(value){ return 'Sent'; }else{ return 'Received'; }
+									 }
+									  
+							}},
+							{header: 'PNR', dataIndex: 'passengerNameRecordURI', width: 60, fixed: true, renderer: function (value, cell, record) {
+								return value.substring(4);
+							}},
+							 
+							{header: 'Component Type', dataIndex: 'componentType', width: 110, fixed: true},
+							 {header: 'Departure Date', dataIndex: 'passengerNameRecordComponentDateFrom', width: 70, fixed: true,	renderer: function (value, cell, record) {
+									 //return value;
+									 var passengerNameRecordComponentDateFrom = record.get('passengerNameRecordComponentDateFrom');
+									  return TDS.util.Format.dateSpecial(passengerNameRecordComponentDateFrom, TDS.env.dateFormatDisplay);
+							}},
+							{header: 'Primary PAX', dataIndex: 'passengerNameRecordPrimaryPaxString', width: 145, fixed: true, renderer: function (value, cell, record) {
+								var paxShortString = record.get('passengerNameRecordComponentPaxDescriptionShortString');
+								var s = '';
+								if (value) s += value;
+								if (value && paxShortString) s += ' ';
+								if (paxShortString) s += '(' + paxShortString + ')';
+								return s;
+							}},
+							{header: 'Pay By', dataIndex: 'paybyDate', width: 70, fixed: true,	renderer: function (value, cell, record) {
+									 //return value;
+									// var passengerNameRecordComponentDateFrom = record.get('passengerNameRecordComponentDateFrom');
+									  return TDS.util.Format.dateSpecial(value, TDS.env.dateFormatDisplay);
+							}
+							},
+							{header: 'Description', dataIndex: 'changeDescription', width: 260, fixed: true,renderer: function (value, cell, record) {
+								cell.attr = 'ext:qtip="' + record.get('changeDescription') + '"';//ext:qtip=
+								var reminders = record.get('reminders');
+								if(reminders){
+								return value=value+' due';
+								}else{
+									return value;
+								}
+							}},
+							{header: 'Supplier', dataIndex: 'supplierName', width: 80, fixed: true,
+								renderer: function (value, cell, record) {
+									 //return value;
+									 var reminders = record.get('reminders');
+									 if(reminders){
+									 return '';
+									 }
+									 var agency = record.get('agencyName');
+									 var supplier = value;
+									 if(TDS.env.user.isAgencyUser()){
+ 										if(!record.get('messageForAgency')){ return supplier; }else{ return agency; }
+									 }else{
+										 if(record.get('messageForAgency')){ return supplier; }else{ return agency; }
+									 }
+							}},
+							{header: ' ', dataIndex: 'actioned', width:60, fixed:true,renderer: function (value, cell, record) {
+								if(value)return '<b><font color="#ff0033">Actioned</font>';
+								else return '';
+							}},
+							{header: 'Updated Date', dataIndex: 'lastUpdatedDate', width:  100, fixed: true, renderer:	TDS.util.Format.dateSpecialRenderer(TDS.env.dateDMYHHMMFormatDisplay)},
+							{header: 'Updated By', dataIndex: 'updatedByUserFullName', width: 190, fixed: true } 
+						]),
+						viewConfig: {
+							forceFit: true,
+							deferEmptyText: false,
+							emptyText: 'No messages to display.' ,
+							getRowClass: function(record, index) {
+								 
+ 								 if (record.get('messageRead')) return 'message-read';
+								 else if (record.get('type') == 'PAY_BY_DATE_ALERT'){  return 'message-red';}
+ 								 else return 'message-not-read';
+ 							}
+						},
+						listeners: {
+							queryresponse: function (p, s) {
+								if (s) {
+									// update the title bar with filtered date
+									var date = p.getQueryParams().dateFrom;
+									 //this.ownerCt.setTitle('Messages from  ' + TDS.util.Format.dateSpecial(date, TDS.env.dateFormatDisplay));
+									 this.ownerCt.setTitle( ' <font color="#cc0000"><b>Queues from '+ TDS.util.Format.dateSpecial(date, TDS.env.dateFormatDisplay) +'</b></font> ' );
+								}
+							},
+							render: function () {
+								// enable "ARCHIVE" buttons on row selection
+								this.getSelectionModel().on('rowselect', function (a,b,c,d,e) {
+									 debugger;
+									var reminders=a.selections.items[0].data.reminders;
+									   
+								 
+									if(!a.selections.items[0].data.messageForAgency) {
+ 										this.items.itemAt(32).setDisabled(true);
+									}else{
+										this.items.itemAt(32).setDisabled(false);
+									}
+									 if(reminders){
+										this.items.itemAt(32).setDisabled(false);
+									}
+								}, this.getTopToolbar());
+
+								// disable "ARCHIVE" buttons on row deselection
+								/*this.getSelectionModel().on('rowdeselect', function () {
+ 									this.items.itemAt(21).setDisabled(true);
+								}, this.getTopToolbar());*/
+								//debugger;
+								//this.ownerCt.setCollapsedTitle(' <table border=0 width="98%"><tr><td align="right"><font color="#cc0000"><b>View Queues</b></font></td></tr></table>');
+								// create listener for 'load' events on the messages store
+								this.store.on('load', function (store, records) {
+									if (records.length > 0){
+										//this.setCollapsedTitle('<b>' + records.length + '</b> message' + (records.length > 1 ? 's' : '') + ' loaded, click here to view your message' + (records.length > 1 ? 's' : '') + '. ');
+										this.setCollapsedTitle('<table border=0 width="100%"><tr><td align="left"><b>' + records.length + '</b> message' + (records.length > 1 ? 's' : '') + ' loaded, click here to view your message' + (records.length > 1 ? 's' : '') + '. </td><td align="right"><font color="#cc0000"><b>View Queues</b></font></td></tr></table>');
+									}
+								}, this.ownerCt);
+							},
+							rowdblclick: function (g, ri) {
+							debugger;
+								var g = this;
+								var record = this.getStore().getAt(ri);
+								var dataURI = record.get('dataURI');
+								var messageForAgency = record.get('messageForAgency');
+								if (record == -1) return;
+								
+								var pnrDataURI = record.get('passengerNameRecordURI');
+								var pnrComponentDataURI = record.get('passengerNameRecordComponentURI');
+								var altOffering = record.get('altOffering');
+
+								if(TDS.env.user.isAgencyUser()){
+ 										if(!messageForAgency){ 
+											//return 'Sent';
+										 }else{
+										 	//return 'Received';
+											if (!record.get('messageRead'))	{
+												Ext.Ajax.request({
+													url: TDS.env.dataPath+'myuser/'+dataURI+'?messageRead=true',
+													method: 'PUT',
+													callback: function (o, s, r) {
+														if (s) {g.submitQuery(true);}
+													}
+												});
+											}
+
+											//opening expander
+												if(altOffering){
+												 		TDS.window.setWindow({
+															title: 'Alternative Offer',
+															interfaceURI: 'fulfillment/generic/displayAltOffer.js',
+															sourceDataURI: pnrComponentDataURI,
+															data:{altOffering:altOffering},
+															buttonOK: false,
+															buttonCancel: 'Close'
+														});
+													}else{
+													 // set the session of the PNR interface
+												 	TDS.session.setByPath(pnrDataURI, {
+														view: 'pnrView',
+														option: 'pnr',
+														focusRecord: pnrComponentDataURI
+													});
+													 // check if tab is already opened
+													if (TDS.workArea.isTabReady('pnr.js', pnrDataURI)) {
+														var tab = TDS.workArea.getTab('pnr.js', pnrDataURI);
+														var tabPanel = tab.items.itemAt(0).items.itemAt(0);
+														var pnrPanel = tabPanel.getPassengerNameRecordPanel();
+														// check the pnr section has been rendered
+														if (pnrPanel.isViewRendered('pnr')) {
+															pnrPanel.focusView('pnrView', 'pnr');
+															// find the grid and focus the row
+															var g = pnrPanel.getView().findByType('awesomegrid')[0];
+															g.focusResult(pnrComponentDataURI, false, true);
+														}
+														// focus it, the result will be focused from the session
+														else pnrPanel.focusView('pnrView', 'pnr');
+													}
+													TDS.workArea.openTab(pnrDataURI, 'pnr.js', pnrDataURI, pnrDataURI);
+													}
+								
+										}
+									 }else{
+										 if(messageForAgency){ 
+											// return 'Sent';
+										 }else{ 
+											//return 'Received'; 
+											if (!record.get('messageRead'))	{
+												Ext.Ajax.request({
+													url: TDS.env.dataPath+'myuser/'+dataURI+'?messageRead=true',
+													method: 'PUT',
+													callback: function (o, s, r) {
+														if (s) {g.submitQuery(true);}
+													}
+												});
+											}
+
+											//Open Expander
+											var dateField = this.findField('dateFrom');
+											// set the session of the Fulfillment interface
+											TDS.session.setByPath('fulfillment', {
+												statusList: 'Cancelled,Cancel requested,Confirmed,Rejected,Requested',
+												dateFromStart: dateField.getValue().format(TDS.env.dateFormat),
+												focusRecord: pnrComponentDataURI
+											});
+											// check if tab is already opened
+											if (TDS.workArea.isTabReady('fulfillment.js', '')) {
+												var tab = TDS.workArea.getTab('fulfillment.js', '');
+												var tabPanel = tab.items.itemAt(0).items.itemAt(0);
+												var fulfillmentGrid = tabPanel.getGrid();
+												// check if the fulfillment grid has been rendered
+												if (fulfillmentGrid.rendered) {
+													// attempt to focus the record, on failure reset the search filter and re-submit
+													if (!fulfillmentGrid.focusResult(pnrComponentDataURI, false, true)) {
+														fulfillmentGrid.setQueryParams({
+															statusList: 'Cancelled,Cancel requested,Confirmed,Rejected,Requested',
+															dateFromStart: dateField.getValue()
+														});
+														fulfillmentGrid.submitQuery(true);
+													}
+												}
+											}
+											TDS.workArea.openTab('Fulfillment', 'fulfillment.js', '', TDS.env.sessionPath + 'fulfillment');
+
+										}
+									}
+								 
+							/*	if (!record.get('messageRead'))	{
+									Ext.Ajax.request({
+										url: TDS.env.dataPath+'myuser/'+dataURI+'?messageRead=true',
+										method: 'PUT',
+										callback: function (o, s, r) {
+											if (s) {g.submitQuery(true);}
+										}
+									});
+								}*/
+
+ 
+								// check if current user is an agency user, run the focus logic for the PNR
+						/*		if (TDS.env.user.isAgencyUser()) {
+								if(altOffering){
+									TDS.window.setWindow({
+										title: 'Alternative Offer',
+										interfaceURI: 'fulfillment/generic/displayAltOffer.js',
+										sourceDataURI: pnrComponentDataURI,
+										data:{altOffering:altOffering},
+										buttonOK: false,
+										buttonCancel: 'Close'
+									});
+								}
+								else{
+									// set the session of the PNR interface
+									TDS.session.setByPath(pnrDataURI, {
+										view: 'pnrView',
+										option: 'pnr',
+										focusRecord: pnrComponentDataURI
+									});
+									// check if tab is already opened
+									if (TDS.workArea.isTabReady('pnr.js', pnrDataURI)) {
+										var tab = TDS.workArea.getTab('pnr.js', pnrDataURI);
+										var tabPanel = tab.items.itemAt(0).items.itemAt(0);
+										var pnrPanel = tabPanel.getPassengerNameRecordPanel();
+										// check the pnr section has been rendered
+										if (pnrPanel.isViewRendered('pnr')) {
+											pnrPanel.focusView('pnrView', 'pnr');
+											// find the grid and focus the row
+											var g = pnrPanel.getView().findByType('awesomegrid')[0];
+											g.focusResult(pnrComponentDataURI, false, true);
+										}
+										// focus it, the result will be focused from the session
+										else pnrPanel.focusView('pnrView', 'pnr');
+									}
+									TDS.workArea.openTab(pnrDataURI, 'pnr.js', pnrDataURI, pnrDataURI);
+									}
+								}
+								// check if the current user is a supplier user, run the focus logic for Fulfillment
+								else if (TDS.env.user.isSupplier()) {
+									var dateField = this.findField('dateFrom');
+									// set the session of the Fulfillment interface
+									TDS.session.setByPath('fulfillment', {
+										statusList: 'Cancelled,Cancel requested,Confirmed,Rejected,Requested',
+										dateFromStart: dateField.getValue().format(TDS.env.dateFormat),
+										focusRecord: pnrComponentDataURI
+									});
+									// check if tab is already opened
+									if (TDS.workArea.isTabReady('fulfillment.js', '')) {
+										var tab = TDS.workArea.getTab('fulfillment.js', '');
+										var tabPanel = tab.items.itemAt(0).items.itemAt(0);
+										var fulfillmentGrid = tabPanel.getGrid();
+										// check if the fulfillment grid has been rendered
+										if (fulfillmentGrid.rendered) {
+											// attempt to focus the record, on failure reset the search filter and re-submit
+											if (!fulfillmentGrid.focusResult(pnrComponentDataURI, false, true)) {
+												fulfillmentGrid.setQueryParams({
+													statusList: 'Cancelled,Cancel requested,Confirmed,Rejected,Requested',
+													dateFromStart: dateField.getValue()
+												});
+												fulfillmentGrid.submitQuery(true);
+											}
+										}
+									}
+									TDS.workArea.openTab('Fulfillment', 'fulfillment.js', '', TDS.env.sessionPath + 'fulfillment');
+								}
+
+								*/
+							}
+						}
+					},
+					listeners: {
+						expand: function () {
+							if (this.hasCollapsedTitle()) this.clearCollapsedTitle();
+						}
+					}
+				}
+			]
+		},
+		// footer
+		{
+			id: 'footer',
+			region: 'south',
+			style: 'border-top: 1px solid #99BBE8;',
+			height: 50,
+			html: [
+				'<div id="footer">',
+				'<table align="center"><tr>',
+					'<td ><img class="logo-tds" src="images/tds-arena.png" alt="TDS Arena"/></td>',
+					'<td class="footerLinks">',
+						'Copyright &copy; 2017 <a href="http://www.tdsworld.com/" target="_blank">Travel Distribution Systems Pty Ltd</a> ',
+						'&bull; <a href="http://www.tdsarena-terms.com/" target="_blank">Disclaimer &amp; Terms</a>',
+					'</td>',
+					//'<td class="footerRemora">Technology by <a href="http://www.remora.com.au/" target="_blank"><img src="remora-logo.gif" alt="Remora"/></a></td>',
+				'</tr></table>',
+				'</div>'
+			]
+		}
+	]
+});
+
+// remove application loading mask
+setTimeout(function(){
+	Ext.get('loading').remove();
+	Ext.get('loading-mask').remove();
+}, 250);
+
+Ext.onReady(function () {
+
+	// initiate application environment
+	with (TDS.env) {
+		// initiate user
+		user.init();
+		// start heartbeat session
+		heartbeat.sessionStart();
+		// start heartbeat pulse
+		heartbeat.pulseStart(true);
+		// update the timer manager "server" time
+		heartbeat.on('sessionlogin', function (o) {
+			Ext.TimerMgr.setServerTime(o.serverTime);
+		});
+	}
+
+// TODO: Logic to determine whether to load Supplier/Agency stores based on current user.
+// i.e. A supplier does not need a list of "suppliers"
+
+	// pre-fetch supplier concise collection
+	TDS.data.getStore({
+		dataURI: TDS.env.dataPath + 'suppliers/collection/concise',
+		identifier: 'suppliers',
+		fields: ['name', 'dataURI']
+	});
+	TDS.data.getStore({
+		dataURI: TDS.env.dataPath + 'suppliers/collection/conciseLoadData',
+		identifier: 'suppliers',
+		fields: ['name', 'dataURI']
+	});
+
+	// pre-fetch agency collection
+	TDS.data.getStore({
+		dataURI: TDS.env.dataPath + 'agencies/collection',
+		identifier: 'agencies',
+		fields: ['name', 'dataURI']
+	});
+
+	TDS.data.getStore({
+		dataURI: TDS.env.dataPath + 'agencies/collection/concise',
+		identifier: 'agencies',
+		fields: ['name', 'dataURI']
+	});
+
+	// pre-fetch the countries store
+	TDS.data.getStore({
+		dataURI: TDS.env.dataPath + 'countries/collection',
+		identifier: 'countries',
+		fields: ['name', 'dataURI']
+	});
+
+	TDS.data.getStore({
+		dataURI: TDS.env.dataPath + 'destination/collection',
+		identifier: 'destination',
+		fields: ['name', 'dataURI']
+	});
+	TDS.data.getStore({
+		dataURI: TDS.env.dataPath + 'cruise/offerings/ship/collection',// TDS.env.dataPath  +'cruise/offerings/seasion/collection'
+		identifier: 'ship',
+		fields: ['name', 'dataURI']
+	});
+	
+	TDS.data.getStore({
+		dataURI: TDS.env.dataPath + 'cruise/offerings/cruiseType/collection',
+		identifier: 'cruiseType',
+		fields: ['name', 'dataURI']
+	});
+	TDS.data.getStore({
+		dataURI: TDS.env.dataPath + 'cruise/offerings/cruiselines/collection',
+		identifier: 'cruiseline',
+		fields: ['name', 'dataURI']
+	});
+
+});
+
+	/*
+	*Delete Extra detail
+	*/
+	function cancelExtra(formName, thisObj)// thisObj
+	{
+
+		var form ;
+		var flag =new Boolean(false);
+		
+		for(var i = 0; i < document.forms.length; i++) 
+		{
+			if(document.forms[i].name == formName)
+			{
+				form = document.forms[i];
+			}
+		}
+		var buttonIds = thisObj.id.split("#");
+		var dataUri = buttonIds[1];
+			
+		if(confirm('Are you sure want to cancel an extra?'))
+		{
+			for(var i = 0; i < form.elements.length; i++) 
+			{
+					if (form.elements[i].type == 'checkbox') 
+					{
+						if (form.elements[i].name == 'checkField#'+dataUri) 
+						{
+							if(form.elements[i].checked)
+							{
+								var ids = form.elements[i].id.split("#");
+								
+								document.forms[formName].submit();
+								//var s11="http://localhost:8080/tds/resources/"+ids[2]+"/passengers/collection/concise";//?_dc=1346428930334
+								//alert("TDS.env.dataPath-----"+TDS.env.dataPath +ids[2]+"/"+'extra/'+ids[1]);
+								//alert("ids[2]---------"+ids[2]);
+								//alert("ids[1]-----------"+ids[1]);
+								Ext.Ajax.request({
+								url: TDS.env.dataPath +ids[2]+"/"+'extra/'+ids[1], //"pnr/CS84AH/component/232" + '/pnr/chktext',
+								method: 'DELETE',
+								callback: function (o, s, r) 
+								{
+										try 
+										{
+											flag=true;
+										} 
+										catch (e) 
+										{
+
+										}
+				
+								}
+								});
+
+							}
+						}
+					}
+				
+				}
+				if(flag)
+				{
+					alert("Deleted successfully");
+				}
+
+
+			}
+	}
+ 	
+var loc = location.href;
+if(loc.indexOf("app") === -1){
+ 	document.getElementById('socialMedia').style.display = 'inline';
+}
+</script>
+</body>
+</html>  
+</body>
+</html>  </html>  ml>  >  </html>  ml>  html>  </html>  ml>  >  </html>  ml>  

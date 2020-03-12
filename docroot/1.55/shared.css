@@ -1,0 +1,102 @@
+/* SITE STYLES */
+p, a, h2, h3, th, td, li, input, select, textarea, legend {
+	font: normal 11px Tahoma, sans-serif;
+}
+h1 {
+	font: 18px sans-serif;
+}
+h2, h3, th, legend {
+	font-weight: bold;
+}
+h2 {
+	font-size: 16px;
+}
+#header {
+	height: 80px;
+}
+#applicationHeader .x-panel-body {
+	background: #C7E2FA;
+}
+#header, #applicationHeader .tdsHeaderLeftColumn .x-panel-body  {
+	background: #C7E2FA url('images/background-waves.png') top left no-repeat;
+}
+#header .arena {
+	float: left;
+	height: 20px;
+}
+#header .arena img, #applicationHeader img {
+	float: left;
+	margin-left: 38px;
+	margin-top: 16px;
+}
+#header .arena h1, #applicationHeader h1 {
+	float: left;
+	margin-left: 225px;
+	margin-top: 48px;
+}
+#header .country {
+	float: left;
+	margin-left: 20px;
+	height: 64px;
+	width: 200px;
+}
+#header .country h1 {
+	display: inline;
+}
+#header .country .currentLocale {
+	margin-top: 49px;
+	text-align: center;
+}
+#header .country .currentLocale a {
+	margin-left: 4px;
+	color: #333;
+}
+#header .country .selectLocale {
+	margin-top: 32px;
+	text-align: center;
+}
+#header .country .selectLocale select {
+	margin-top: 4px;
+	font-size: 12px;
+}
+#header .authenticated {
+	margin-top: 0px;
+}
+#header .authenticated .button {
+	width: 100px;
+	padding: 4px;
+}
+#footer {
+	font: normal 11px Tahoma, sans-serif;
+	background: #fff;
+	clear: both;
+}
+#footer table {
+	margin: auto;
+}
+#footer .arenaLink, #footer .footerLinks, #footer .footerRemora {
+	vertical-align: middle;
+}
+#footer .arenaLink {
+	text-align: center;
+}
+#footer .arenaLink img {
+	padding-right: 10px;
+}
+#footer .footerLinks, #footer .footerLinks a, #content a {
+	text-align: center;
+	color: #000;
+}
+#footer .footerRemora {
+	padding-left: 10px;
+	text-align: center;
+	color: #393;
+}
+#footer .footerRemora img {
+	margin-left: 4px;
+}
+img.logo-tds {
+  top:10px;
+  width: 60px;
+  height: 38px;
+}

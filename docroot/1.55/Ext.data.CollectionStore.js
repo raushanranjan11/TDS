@@ -1,0 +1,1 @@
+Ext.data.CollectionStore=function(a){Ext.data.CollectionStore.superclass.constructor.call(this,Ext.apply(a,{proxy:a.proxy||(!a.data?new Ext.data.HttpProxy({url:a.url}):undefined),reader:new Ext.data.CollectionReader(a,a.fields)}))};Ext.extend(Ext.data.CollectionStore,Ext.data.Store);

@@ -1,0 +1,1 @@
+{xtype:"panel",title:"Location Administration",cls:"x-tds-homebox",frame:true,autoHeight:true,items:[{html:"<a href=\"#\" onclick=\"return TDS.workArea.openTab('Locations', 'location/list.js', '', '"+TDS.env.sessionPath+"location');\">Location management</a>"}]}

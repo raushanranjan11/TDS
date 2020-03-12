@@ -1,0 +1,1 @@
+{xtype:"panel",border:false,width:350,height:220,style:"padding:10px;",autoScroll:true,markDataDirtyOnLoad:true,beforeSubmit:function(a){return a},beforeDataLoad:function(b,a){return b},items:[{html:""},{listeners:{render:function(){this.html=this.findParentByType("awesomewindow").getData()}}}]}

@@ -1,0 +1,1 @@
+{xtype:"panel",title:"Admin BPAY",cls:"x-tds-homebox",frame:true,autoHeight:true,items:[{html:"<a href=\"#\" onclick=\"return TDS.workArea.openTab('BPAY', 'bpay/bpay.js', '', '"+TDS.env.sessionPath+"bpay');\">BPAY</a>"}]}

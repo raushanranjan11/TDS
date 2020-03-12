@@ -1,0 +1,1 @@
+{xtype:"panel",border:false,markDataDirtyOnLoad:true,beforeSubmit:function(a){return a},beforeDataLoad:function(b,a){return b},items:[{html:"",width:300},{listeners:{render:function(){;var c=this;var b=this.ownerCt.findParentByType("awesomewindow");this.html=b.getParam("segmentFlight")}}}]}

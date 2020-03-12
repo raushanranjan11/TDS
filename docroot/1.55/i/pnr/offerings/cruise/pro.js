@@ -1,0 +1,1 @@
+{xtype:"form",border:false,termsAndConditions:"",markDataDirtyOnLoad:true,width:900,items:[{xtype:"tabpanel",activeTab:0,layoutOnTabChange:true,height:450,defaults:{}}],listeners:{render:function(){}}}

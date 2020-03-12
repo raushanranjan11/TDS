@@ -1,0 +1,1 @@
+{xtype:"panel",layout:"fit",border:false,html:'<iframe src="https://booking.sevenoceans.com.au/admin/login.aspx" style="width: 100%; height: 100%; border: none;"></iframe>'}

@@ -1,0 +1,1 @@
+{xtype:"form",border:false,width:550,items:[{xtype:"tabpanel",activeTab:0,layoutOnTabChange:true,height:300,defaults:{bodyStyle:"padding: 6px 4px 6px 4px;"},items:[{title:"Credit Payment",layout:"fit"}]}]}

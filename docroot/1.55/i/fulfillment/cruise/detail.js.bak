@@ -1,0 +1,672 @@
+{
+	xtype: "panel",
+	border: false,
+	layout: "column",
+	id: "cruiseFullfillment",
+	bodyStyle: "padding: 8px;",
+	config: {
+		category: "",
+		categoryURI: "",
+		pricePerPerson: "",
+		totalPrice: ""
+	},
+	items: [{
+			columnWidth: 1,
+			xtype: "panel",
+			layout: "column",
+			border: false,
+			getComponentPanel: function () {
+				return this.items.itemAt(1)
+			},
+			getPassengerPanel: function () {
+				return this.items.itemAt(2).items.itemAt(0)
+			},
+			defaults: {
+				columnWidth: 0.65
+			},
+			items: [{
+					xtype: "panel",
+					layout: "column",
+					columnWidth: 0.12,
+					id: "pan2",
+					hideBorders: true,
+					config: {
+						category: ""
+					},
+					height: 300,
+					items: [{
+							tpl: new Ext.XTemplate(['<div style="height:125px;  overflow-y: scroll;">', "<p><b>Agent:</b> {agencyName}</p>", "<p><b>Consultant:</b> {consultantName}</p>", "<p><b>Tel:</b> {telephoneNo}</p>", "<p><b>Email:</b> {email}</p>", "<p><b>Location:</b> {agentLocation}</p>", "<p><b>Country:</b> {country}</p>", "<p><b>Date / Time:</b> {bookingDateTime}</p>", "</div>"]),
+							listeners: {
+								render: function () {
+									var d = this.ownerCt.findParentByType("tabpanel");
+									var c = d.getComponentDetail("agencyURI");
+									Ext.Ajax.request({
+										url: TDS.env.dataPath + c + "?forceGet=true",
+										method: "GET",
+										callback: function (a, i, e) {
+											if (i) {
+												try {
+													var j = Ext.util.JSON.decode(e.responseText);
+													this.tpl.overwrite(this.body, {
+														agencyName: TDS.util.Format.displayResourceName(c),
+														consultantName: d.getComponentDetail("createdByUserFullNameString"),
+														telephoneNo: j.phoneNumber,
+														email: j.email,
+														agentLocation: j.locality,
+														country: TDS.util.Format.displayResourceName(j.countryURI),
+														bookingDateTime: TDS.util.Format.dateSpecial(d.getComponentDetail("createdDate"), TDS.env.dateTimeFormatDisplay)
+													})
+												} catch (b) {}
+											}
+										},
+										scope: this,
+										disableCaching: true
+									})
+								}
+							}
+						}
+					]
+				}, {
+					columnWidth: 0.5,
+					xtype: "panel",
+					height: 400,
+					border: true,
+					tpl: new Ext.XTemplate('<div style="height:275px; overflow-y: scroll;">',
+						'<table class="x-tds-dataview" style="width: 100%;" border=1 cellpadding = 1 cellspacing=0  ><tr style="background-color: #d0def0;"><th style="padding: 2px; width: 14%;">Cruise Lines </th><th style="padding: 2px; width: 14%;">Ship </th><th style="padding: 2px; width: 14%;">Cruise Name </th><th style="padding: 2px; width: 14%;">Embark </th><th style="padding: 2px; width: 14%;">Date </th></tr><tr><td style="padding: 2px; width: 14%;">{cruiseline}</td><td style="padding: 2px; width: 14%;">{cruiseShips}</td><td style="padding: 2px; width: 14%;">{cruiseName}</td><td style="padding: 2px; width: 14%;">{embarkation}</td><td style="padding: 2px; width: 14%;">{dates}</td></tr></table><table class="x-tds-dataview" style="width: 100%;" border=1 cellpadding = 1 cellspacing=0  ><tr style="background-color: #d0def0;"><th style="padding: 2px; width: 12%;">Category </th><th style="padding: 2px; width: 14%;">Stateroom Type </th><th style="padding: 2px; width: 15%;">Stateroom Number </th><th style="padding: 2px; width: 6%;">Pax </th><th style="padding: 2px; width: 6%;">Deck </th><th style="padding: 2px; width: 8%;">Position </th><th style="padding: 2px; width: 10%;">Obstruct </th><th style="padding: 2px; width: 10%;">Status </th></tr>', "{rateBody}", '</table> <table class="x-tds-dataview" style="width: 100%;" border=1 cellpadding = 1 cellspacing=0  ><tr style="background-color: #d0def0;"><th style="padding: 2px; width: 14%;">Cruise price</th><th style="padding: 2px; width: 14%;"> Extras</th><th style="padding: 2px; width: 14%;"> Package Price</th><th style="padding: 2px; width: 24%;">Total Price </th><th style="padding: 2px; width: 14%;">Markup </th><th style="padding: 2px; width: 14%;">Commission</th></tr><tr><td style="padding: 2px; width: 14%;">{pricingPriceCurrency}&nbsp;{cruisePackage}</td><td style="padding: 2px; width: 14%;"></td><td style="padding: 2px; width: 14%;"> {pricingPriceCurrency}&nbsp;{pricingPriceSell}</td><td style="padding: 2px; width: 24%;">{total}</td><td style="padding: 2px; width: 14%;">{pricingPriceCurrency}&nbsp;{markup}</td><td style="padding: 2px; width: 14%;">{priceCommission}</td></tr></table><table border="0" width="100%">', "</table>", "</div>", '<div> <table style="width: 100%;"><tr><td>{createdString}</td></tr></table></div>'),
+					listeners: {
+						render: function () {}
+					}
+				}, {
+					xtype: "panel",
+					height: 150,
+					columnWidth: 0.38,
+					layout: "fit",
+					typeStatusMap: {},
+					items: [{
+							xtype: "grid",
+							enableRowExpander: false,
+							sessionExpandedRows: false,
+							height: 110,
+							autoScroll: true,
+							border: false,
+							enableColumnHide: false,
+							enableColumnMove: false,
+							enableColumnResize: false,
+							enableHdMenu: false,
+							store: new Ext.data.JsonStore({
+								url: "",
+								id: "dataURI",
+								fields: ["dataURI", "displayName", "code", "roomType", "dateOfBirth", "addressString", "phoneNumber1", "emailAddress", "gender", "status", "abstractRateId", "priceSell", "isCruisePackage"]
+							}),
+							columns: [{
+									header: "Pax",
+									dataIndex: "displayName",
+									width: 120,
+									fixed: true,
+									sortable: true,
+									renderer: function (j, k, h, i, l, g) {
+										return j
+									}
+								}, {
+									header: "Type",
+									dataIndex: "code",
+									width: 40,
+									fixed: true
+								}, {
+									header: "Gender",
+									dataIndex: "gender",
+									renderer: TDS.util.Format.gender,
+									width: 50,
+									fixed: true
+								}, {
+									header: "DOB",
+									dataIndex: "dateOfBirth",
+									width: 70,
+									fixed: true,
+									renderer: TDS.util.Format.dateSpecialRenderer(TDS.env.dateBirthdayFormatDisplay)
+								}, {
+									header: "Age",
+									dataIndex: "dateOfBirth",
+									renderer: TDS.util.Format.age,
+									width: 40,
+									fixed: true
+								}, {
+									header: "CR/PK",
+									dataIndex: "isCruisePackage",
+									width: 70,
+									fixed: true,
+									renderer: function (f, e, b, g, d, c, a) {
+										if (f) {
+											return "PK"
+										} else {
+											return "CR"
+										}
+									}
+								}, {
+									header: "Price",
+									dataIndex: "priceSell",
+									width: 40,
+									fixed: true,
+									renderer: function (f, e, b, g, d, c, a) {
+										if (b.get("priceSell") == "") {
+											return ""
+										} else {
+											return f.toFixed(2)
+										}
+									}
+								}, {
+									header: "Status",
+									dataIndex: "status",
+									width: 50,
+									fixed: true
+								}
+							],
+							viewConfig: {
+								forceFit: true
+							},
+							listeners: {
+								render: function () {
+									this.getEl().swallowEvent(["columnmove", "columnresize", "headerclick", "click", "mouseout", "rowclick", "rowmousedown", "rowdbclick", "cellblclick", "sortchange", "mouseup", "mousedown"]);
+									var c = this.ownerCt.findParentByType("tabpanel");
+									var d = c.getComponentDetail("dataURI");
+									Ext.Ajax.request({
+										url: TDS.env.dataPath + d + "/passengers/collection/concise",
+										method: "GET",
+										callback: function (o, a, q) {
+											if (a) {
+												var i = Ext.util.JSON.decode(q.responseText);
+												var m = i[d + "/passengers"];
+												if (typeof m == "undefined") {
+													return
+												}
+												var b = [];
+												for (var n = 0; n < m.length; n++) {
+													i[m[n]].dataURI = m[n];
+													b.push(i[m[n]])
+												}
+												var p = this;
+												var r = p.store;
+												r.loadData(b);
+												p.getView().refresh()
+											}
+										},
+										scope: this
+									})
+								}
+							}
+						}
+					]
+				}
+			],
+			hasInventory: false,
+			hasPassengers: false,
+			isReady: function () {
+				if (this.hasPassengers && this.hasInventory) {
+					return true
+				}
+				return false
+			},
+			initInventory: function (c) {
+				var e = this.ownerCt.findParentByType("tabpanel");
+				var a = e.getComponentDetail("dataURI");
+				var a = e.getComponentDetail("dataURI"); ;
+				var d;
+				Ext.Ajax.request({
+					url: TDS.env.dataPath + a + "/offerList",
+					method: "GET",
+					callback: function b(g, t, f) { ;
+						var m = Ext.util.JSON.decode(f.responseText);
+						var l = m.offerList;
+						if (typeof l == "undefined") {
+							return
+						}
+						var n = [];
+						for (var k = 0; k < l.length; k++) {
+							m[l[k]].dataURI = l[k];
+							n.push(m[l[k]])
+						}
+						d = n; ;
+						var j = e.getComponentDetail("dataURI");
+						var h = e.getComponentDetail("offeringURI");
+						var p = j;
+						var q = new Array();
+						q = j.split("/");
+						Ext.Ajax.request({
+							url: TDS.env.dataPath + j + "/inventories/collection",
+							method: "GET",
+							success: function (Y) {
+								try {
+									var T = Ext.decode(Y.responseText)
+								} catch (ai) {}
+								if (T) {
+									var I = 0,
+									V,
+									aa = [];
+									var R = 0;
+									var af = T["component/inventory/collection"];
+									var x = af[j + "/inventories"];
+									var Z = T["component/rate/collection/"];
+									var o = Z["component/rate/collection/list"];
+									var D = T["component/selectedCruiseRateCabins"];
+									var J = "";
+									var C = this.findByType("grid")[0].getStore().getTotalCount();
+									var E = [];
+									this.findByType("grid")[0].getStore().each(function (i) {
+										E.push(i.get("type"))
+									});
+									if (typeof D != "undefined" && D != "" && D.length > 0) {
+										for (var ae = 0; ae < D.length; ae++) {
+											var S = D[ae];
+											var w = T[S]
+										}
+									}
+									var X = new Array();
+									X = j.split("/");
+									var K = "";
+									this.rateData = [];
+									var am = x.length / o.length;
+									var ab = [];
+									var M = "";
+									var ah = [];
+									e.setDetail("rateList", o);
+									var s = [];
+									for (var ae = 0; ae < o.length; ae++) {
+										s.push(Z[o[ae]])
+									}
+									var y = this.ownerCt.ownerCt.findParentByType("ajaxpanel");
+									var Q = y.rowRecordData.status;
+									var ag = e.getComponentDetail("dataURI");
+									var L = this.findParentByType("tabpanel").items.items[0].findByType("button")[0];
+									var O = [{
+											nameString: "",
+											maximumOccupancy: "",
+											status: "",
+											obstruct: "",
+											dataURI: "",
+											expireDate: "",
+											position: "",
+											totalPax: "",
+											deckNo: "",
+											price: "",
+											cRateDataURI: "",
+											priceSell: ""
+										}
+									];
+									if (n.length != 0) {
+										L.config.rateList = n;
+										if (typeof(L.config.rateList[0].status) !== "undefined") {
+											Q = L.config.rateList[0].status
+										} else {
+											Q = Q
+										}
+										if (typeof(L.config.rateList[0].offeringURI) === "undefined") {
+											L.config.offeringURI = h;
+											L.config.rateList[0].offeringURI = h;
+											L.config.rateList[0].maximumOccupancy = y.rowRecordData.passengersTotal;
+											L.config.rateList[0].priceSell = y.rowRecordData.cruisePackagePrice
+										}
+										if (typeof(L.config.rateList[0].nameString) === "undefined") {
+											L.config.rateList[0].nameString = s[0].nameString
+										}
+										if (typeof(L.config.rateList[0].cRateDataURI) === "undefined") {
+											L.config.rateList[0].cRateDataURI = o[0]
+										}
+									} else {
+										L.config.rateList = O;
+										L.config.rateList[0].nameString = s[0].nameString;
+										L.config.rateList[0].status = Q;
+										Q = L.config.rateList[0].status;
+										L.config.rateList[0].offeringURI = h;
+										L.config.offeringURI = h;
+										L.config.rateList[0].cRateDataURI = o[0];
+										L.config.rateList[0].maximumOccupancy = y.rowRecordData.passengersTotal,
+										L.config.rateList[0].priceSell = y.rowRecordData.cruisePackagePrice
+									}
+									var H = 0;
+									if (x.length > 0) {
+										for (var ae = 0; ae < x.length; ae++) {
+											var aj = af[x[ae]];
+											aa[aa.length] = TDS.util.Format.dateSpecial(aj.componentPaybyDate, TDS.env.dateFormatDisplay);
+											M = aj.pricingPriceCurrency;
+											if (ah.indexOf(aj.rateId) == -1) {
+												ah[ae] = aj.rateId;
+												ab[H] = TDS.util.Price.calculateFixedGrossNettPrice({
+														pricingPriceCurrency: aj.pricingPriceCurrency,
+														pricingPriceSell: aj.pricingPriceSell,
+														pricingPriceCommission: aj.pricingPriceCommission,
+														pricingPriceIsNett: aj.pricingPriceIsNett
+													});
+												ab[H].rateId = aj.rateId;
+												ab[H].quantity = aj.quantity;
+												H++
+											}
+										}
+										var W = "";
+										var P = 0;
+										var z = "";
+										var ad = 0;
+										if (o.length > 0) {
+											for (var ae = 0; ae < o.length; ae++) {
+												var N = Z[o[ae]];
+												ad = N.extraTotal;
+												K = Z[o[ae]].tempBookedDate;
+												var U = [];
+												var ak = N.groupName;
+												var v = "";
+												var F = "";
+												var u = 0;
+												var A = "";
+												Z[o[ae]].pricingPriceIsNett;
+												if (Z[o[ae]].pricingPriceIsNett) {
+													A = "Net"
+												} else {
+													A = "Gross"
+												}
+												z = Z[o[ae]].category;
+												this.ownerCt.config.category = N.nameString;
+												this.ownerCt.config.categoryURI = o[ae];
+												var G = null;
+												for (var ac = 0; ac < ab.length; ac++) {
+													if (ab[ac].rateId == o[ae].substring(o[ae].lastIndexOf("/") + 1, o[ae].length)) {
+														G = ab[ac]
+													}
+												}
+												if (!G.priceIsNett) {
+													v = G.priceCommissionPercentage
+												} else {
+													F = G.priceCommission;
+													R += (G.quantity * G.priceCommission)
+												}
+												P += (G.quantity * G.priceSell);
+												var y = this.ownerCt.ownerCt.findParentByType("ajaxpanel");
+												var al = this.findParentByType("ajaxpanel").ownerCt.ownerCt.ownerCt.ownerCt.ownerCt.getStore();
+												W += "<tr>";
+												W += "<td>" + N.nameString + "</td>";
+												if (n.length == 0) {
+													W += "<td></td>",
+													W += "<td></td>"
+												} else {
+													if (typeof(n[0].stateRoomType) != "undefined") {
+														W += "<td>" + n[0].stateRoomType + "</td>"
+													}
+													if (typeof(n[0].stateRoomNumber) != "undefined") {
+														W += "<td>" + n[0].stateRoomNumber + "</td>"
+													}
+												}
+												W += "<td>" + N.maximumOccupancy + "</td>";
+												if (n.length == 0) {
+													W += "<td></td>",
+													W += "<td></td>",
+													W += "<td></td>"
+												} else {
+													if (typeof(n[0].deckNo) != "undefined") {
+														W += "<td>" + n[0].deckNo + "</td>"
+													}
+													if (typeof(n[0].position) != "undefined") {
+														W += "<td>" + n[0].position + "</td>"
+													}
+													if (typeof(n[0].obstruct) != "undefined") {
+														if (n[0].obstruct == true) {
+															W += "<td>YES</td>"
+														} else {
+															W += "<td>NO</td>"
+														}
+													}
+												}
+												W += "<td>" + Q + "</td>",
+												W += "</tr>"
+											}
+											P += R;
+											P += ad;
+											P += u;
+											this.ownerCt.config.totalPrice = P
+										}
+										if (aa.length > 0) {
+											var B = aa[0]
+										} else {
+											var B = aa
+										}
+										this.inventoryData = {
+											rateBody: W,
+											cabinsBody: J,
+											dataURI: j,
+											divDataUri: p,
+											numberOfNights: am,
+											dates: B,
+											markup: TDS.util.Price.formatPrice(R, M),
+											pnrCode: X[1],
+											bookeddateDis: K,
+											total: y.rowRecordData.cruisePackagePrice != "" ? TDS.util.Price.formatPrice(parseInt(y.rowRecordData.cruisePackagePrice), M) : "",
+											priceCommission: v,
+											cruisePackage: y.rowRecordData.cruisePackage == 0 ? TDS.util.Price.formatPrice(parseInt(y.rowRecordData.cruisePackagePrice), M) : "",
+											grossNett: A,
+											category: z,
+											pricingPriceSell: y.rowRecordData.cruisePackagePrice != "" ? TDS.util.Price.formatPrice(parseInt(y.rowRecordData.cruisePackagePrice) / N.maximumOccupancy, M) : ""
+										};
+										this.hasDetailsInventory = true;
+										this.displayDetails()
+									}
+								}
+							},
+							scope: this
+						})
+					},
+					scope: this
+				})
+			},
+			initOffering: function () {
+				var c = this.ownerCt.findParentByType("tabpanel");
+				var b = Ext.getCmp("fullfillmentId").getSelectionModel().getSelections();
+				var a = c.getComponentDetail("offeringURI");
+				Ext.Ajax.request({
+					url: TDS.env.dataPath + a,
+					method: "GET",
+					callback: function (i, d, g) {
+						if (d) {
+							try {
+								var f = Ext.decode(g.responseText)
+									console.log(f);
+							} catch (h) {}
+							if (f) {
+								c.initialConfig.config.cruiseName = f.cruiseName;
+								this.offeringData = {
+									//cruiseShips: f.cruiseShips,
+									//cruiseline: f.cruiseline,
+									cruiseline: typeof (f.cruiseline) == "undefined" ? f.cruiseLineName :  f.cruiseline,
+										  cruiseShips: typeof (f.cruiseShips) == "undefined" ? f.cruiseShipName : f.cruiseShips,
+                          //  cruiseline:  typeof (d.cruiseline) == "undefined" ? d.cruiseLineName :  d.cruiseline,
+                            cruiseName: typeof (f.cruiseName) == "undefined" ? f.name : f.cruiseName,
+									cruiseName: f.cruiseName,
+									embarkation: f.embarkation,
+									locationFromString: f.locationFromString,
+									locationToString: f.locationToString,
+									duration: f.duration,
+									departureDate: TDS.util.Format.dateSpecial(f.departureDate, TDS.env.dateFormatDisplay),
+									arrivalDate: TDS.util.Format.dateSpecial(f.arrivalDate, TDS.env.dateFormatDisplay)
+								};
+								this.hasDetailsOffering = true;
+								this.displayDetails()
+							}
+						}
+					},
+					scope: this
+				})
+			},
+			displayDetails: function () {
+				var b = this.ownerCt.findParentByType("tabpanel");
+				var a = TDS.util.Price.calculateFixedGrossNettPrice({
+						pricingPriceCurrency: b.getComponentDetail("pricingPriceCurrency"),
+						pricingPriceSell: b.getComponentDetail("pricingPriceSell")
+					});
+				this.getComponentPanel().tpl.overwrite(this.getComponentPanel().body, Ext.apply({}, this.inventoryData, this.offeringData));
+				this.el.unmask()
+			},
+			listeners: {
+				render: function () {
+					this.el.mask("", "x-mask-loading");
+					this.initOffering();
+					this.initInventory()
+				}
+			}
+		}, {
+			xtype: "panel",
+			autoHeight: true,
+			border: false,
+			bodyStyle: "padding: 4px;",
+			width: 150,
+			defaults: {
+				minWidth: 100
+			},
+			invokeWindow: function (b, c) {
+				if (!c) {
+					c = {}
+				}
+				var f = this.ownerCt.findParentByType("tabpanel");
+				var e = f.ownerCt;
+				var a = f.getComponentDetail("dataURI");
+				var d = this;
+				if (!a) {
+					return
+				}
+				Ext.apply(c, {
+					title: "Edit",
+					information: "You may edit the details of this component below.",
+					interfaceURI: "fulfillment/cruise/edit.js",
+					destinationDataURI: a + "/offer",
+					sourceDataURI: a,
+					buttonOK: "Send",
+					scope: d,
+					dataURI: {
+						component: a,
+						offering: f.getComponentDetail("offeringURI")
+					},
+					params: {
+						status: b,
+						priceCurrency: f.getComponentDetail("pricingPriceCurrency")
+					},
+					callback: {
+						fn: function (g) {
+							if (g) {
+								e.refreshGrid()
+							}
+						},
+						scope: this
+					}
+				});
+				TDS.window.setWindow(c)
+			},
+			listeners: {
+				render: function () {
+					var c = this.items.itemAt(0);
+					var g = this.items.itemAt(1);
+					var d = this.items.itemAt(2);
+					var b = this.items.itemAt(3);
+					var e = this.items.itemAt(4);
+					var f = this.ownerCt.findParentByType("tabpanel");
+					var a = f.getComponentDetail("status");
+					console.log(a);
+					if (a.toLowerCase() == TDS.data.componentStatus.STATUS_HELD.toLowerCase()) {
+						g.show();
+						d.show()
+					} else {
+						if (a.toLowerCase() == TDS.data.componentStatus.STATUS_OK.toLowerCase()) {
+							c.disable()
+						} else {
+							if (a.toLowerCase() == TDS.data.componentStatus.STATUS_CONFIRMED.toLowerCase()) {
+								d.show()
+							} else {
+								if (a.toLowerCase() == TDS.data.componentStatus.STATUS_CANCEL_REQUESTED.toLowerCase()) {
+									d.show()
+								} else {
+									if (a.toLowerCase() == TDS.data.componentStatus.STATUS_CANCELLED.toLowerCase()) {
+										c.disable()
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			items: [{
+					xtype: "button",
+					text: "Edit",
+					config: {
+						rateList: "",
+						status: "",
+						offeringURI: ""
+					},
+					handler: function () {
+						var a = this.ownerCt;
+						a.invokeWindow("doNothing")
+					}
+				}, {
+					xtype: "button",
+					text: "Confirm",
+					hidden: true,
+					handler: function () {
+						var a = this.ownerCt;
+						a.invokeWindow(TDS.data.componentStatus.STATUS_CONFIRMED)
+					}
+				}, {
+					xtype: "button",
+					text: "Cancel",
+					hidden: true,
+					handler: function () {
+						var a = this.ownerCt;
+						a.invokeWindow(TDS.data.componentStatus.STATUS_CANCELLED)
+					}
+				}, {
+					xtype: "button",
+					text: "Note",
+					handler: function () {
+						var b = this;
+						var c = this.ownerCt.findParentByType("tabpanel");
+						var a = c.getComponentDetail("dataURI");
+						console.log(a);
+						TDS.window.setWindow({
+							title: "Send a note",
+							information: "Please enter your note below.",
+							interfaceURI: "note.js",
+							postDataURI: a + "/note",
+							scope: b,
+							dataURI: {
+								component: a
+							},
+							callback: {
+								fn: function (d) {},
+								scope: this
+							}
+						})
+					}
+				}
+			]
+		}
+	]
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

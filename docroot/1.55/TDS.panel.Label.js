@@ -1,0 +1,1 @@
+TDS.panel.Label=Ext.extend(Ext.Panel,{setText:function(a){if(Ext.isArray(a)){a=a.join("")}this.body.dom.innerHTML=a}});Ext.reg("labelpanel",TDS.panel.Label);

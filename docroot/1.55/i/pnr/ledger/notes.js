@@ -1,0 +1,1 @@
+{xtype:"form",layout:"form",border:false,items:[{xtype:"textarea",name:"notes",height:300,hideLabel:true,labelSeparator:"",anchor:"100%"}]}

@@ -1,0 +1,1 @@
+{xtype:"panel",height:80,border:false,bodyStyle:"padding: 8px;",items:{html:"<p>This is a place holder interface.</p>"}}

@@ -1,0 +1,153 @@
+/* STANDARD STYLES */
+body {
+	background-color: #fff;
+	padding: 0;
+	margin: 0;
+}
+table {
+	border: 0;
+	border-collapse: collapse;
+}
+th {
+	text-align: left;
+}
+th, td {
+	vertical-align: baseline;
+}
+img {
+	border: 0;
+}
+form {
+	display: inline;
+}
+
+div.clearer {
+	clear: both;
+}
+
+/* SITE STYLES */
+div, p, h2, h3, th, td, li, input, select, textarea, legend {
+	font: normal 11px Tahoma, sans-serif;
+}
+h1 {
+	font: 18px sans-serif;
+}
+h1.disclaimer {
+	text-align: center;
+	font-weight: bold;
+}
+h2, h3, th, legend {
+	font-weight: bold;
+}
+h2 {
+	font-size: 16px;
+}
+#content #contentLeftColumn {
+	float: left;
+	width: 518px;
+	padding: 20px 16px;
+}
+#content #contentRightColumn {
+	float: left;
+	width: 240px;
+	padding: 4px 0;
+	text-align: right;
+}
+#content #contentImage {
+	padding: 20px 15px;
+}
+#content .imageContainer {
+	margin-bottom: 6px;
+	padding: 2px;
+	border: 1px solid #ccc;
+	text-align: center;
+}
+#content fieldset {
+	width: 400px;
+}
+#content table.layout th {
+	width: 100px;
+}
+#content fieldset .button {
+	width: 100px;
+}
+#content input.medium {
+	width: 160px;
+}
+#content p.buttons input.button {
+	height: 28px;
+	width: 120px;
+}
+
+/* 
+LAUNCHER PAGE STYLE..
+*/
+
+.x-tds-ad {
+	float: left;
+	border: 1px solid #ccc;
+	width: 99.5%;
+	height: 90%;
+	overflow :scroll;
+
+	padding-left: 8px !important;
+}
+.x-tds-announcements {
+	float: left;
+	border: 1px solid #ccc;
+	width: 56%;
+	height: 72.45%;
+	padding-top:10px !important;
+	padding-bottom:10px !important;
+	padding-right:10px !important;
+	padding-left:10px !important;
+	background-color:#b0c4de;
+	overflow-y:scroll;
+	margin-top: 8px !important;
+	/*padding-left: 0px !important;*/
+}
+.x-tds-right-ad-div {
+	float: right;
+ 	width: 39.5%;
+	height: 80%;
+	/*
+	border: 1px solid #ccc;
+	background-color:#b0c4de;
+	 overflow-y:scroll;*/
+	margin-top: 5px !important;
+	padding-left: 2px !important;
+	margin-right: 25px !important;
+}
+.x-tds-right-each-ad {
+	float: left;
+	border: 2px solid #000000;
+	width: 48.5%;
+	height: 42%;
+		visibility:hidden;
+	background-color:#a7a7a7;
+ 	margin-top: 2px !important;
+ 	margin-right: 2px !important;
+ }
+.x-tds-bottom-ad-div {
+	float: left;
+ 	width: 58%;
+	height: 35%;
+	 
+	/*
+	border: 1px solid #ccc;
+	background-color:#b0c4de;
+	 overflow-y:scroll;*/
+	margin-top: 5px !important;
+	margin-bottom: 05px !important;
+	padding-left: 2px !important;
+}
+.x-tds-bottom-each-ad {
+	float: left;
+	border: 2px solid #000000;
+	width: 32.5%;
+	height: 34%;
+		visibility:hidden;
+	background-color:#a7a7a7;
+ 	margin-top: 8px !important;
+ 	margin-right: 2px !important;
+ } 

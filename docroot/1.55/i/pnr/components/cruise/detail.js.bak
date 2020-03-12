@@ -1,0 +1,721 @@
+{
+    requireStores: [{
+        dataURI: TDS.env.dataPath + "cruise/classes/collection",
+        identifier: "cruise/classes",
+        fields: ["name", "dataURI"]
+    }, {
+        dataURI: TDS.env.dataPath + "cruise/cabintypes/collection",
+        identifier: "cruise/cabintypes",
+        fields: ["name", "dataURI", "displayName"]
+    }, {
+        dataURI: TDS.env.dataPath + "cruise/extracategories/collection",
+        identifier: "cruise/extracategories",
+        fields: ["name", "dataURI"]
+    }, {
+        dataURI: TDS.env.dataPath + "rate/classes/collection",
+        identifier: "rate/classes",
+        fields: ["name", "dataURI"]
+    }, {
+        dataURI: TDS.env.dataPath + "rate/pers/collection",
+        identifier: "rate/pers",
+        fields: ["name", "dataURI"]
+    }, {
+        dataURI: TDS.env.dataPath + "rate/occupancies/collection",
+        identifier: "rate/occupancies",
+        fields: ["name", "dataURI"]
+    }],
+    xtype: "panel",
+    height: 300,
+    border: false,
+    layout: "column",
+    getDataURI: function() {
+        return this.ownerCt.getDataURI()
+    },
+    getDetailsPanel: function() {
+        return this.items.itemAt(0)
+    },
+    getPassengersPanel: function() {
+        return this.items.itemAt(1)
+    },
+    hasDetailsInventory: false,
+    hasDetailsOffering: false,
+    isDetailsReady: function() {
+        if (this.hasDetailsInventory && this.hasDetailsOffering) {
+            return true
+        }
+        return false
+    },
+    items: [{
+        tbar: [{
+            xtype: "button",
+            text: "Edit Pay By",
+            handler: function() {
+                var e = this.ownerCt.findParentByType("tabpanel");
+                var d = e.ownerCt;
+                var c = e.getDetail("dataURI");
+                var a = e.getDetail("paybyDate");
+                var b = e.getDetail("depositDescription");
+                TDS.window.setWindow({
+                    title: "Description",
+                    information: "Please enter description.",
+                    interfaceURI: "pnr/components/accommodation/editPayby.js",
+                    destinationDataURI: c + "/updatePayBYDates",
+                    data: {
+                        paybyDate: a,
+                        depositDescription: b
+                    },
+                    callback: {
+                        fn: function(f) {
+                            d.refreshGrid()
+                        }
+                    }
+                })
+            }
+        }, {
+            xtype: "datefield",
+            hidden: true
+        }, {
+            xtype: "button",
+            text: "Save",
+            disabled: true,
+            hidden: true
+        }, "->", {
+            xtype: "button",
+            text: "Additinonal Info",
+            id: "yy",
+            handler: function() {
+                var b = this.ownerCt.findParentByType("tabpanel");
+                var a = b.getDetail("dataURI");
+                if (!a) {
+                    return
+                }
+                TDS.window.setWindow({
+                    title: "Attraction PNR",
+                    interfaceURI: "pnr/components/generic/additionalInfo.js",
+                    sourceDataURI: a + "/additionalInfo",
+                    destinationDataURI: a + "/additionalInfo"
+                })
+            }
+        }, {
+            xtype: "button",
+            buttonAlign: "left",
+            disabled: true,
+            text: "Download Voucher",
+            handler: function() {
+                var e = this.ownerCt.findParentByType("tabpanel");
+                var d = e.ownerCt;
+                var c = "/voucher/";
+                var a = e.getDetail("dataURI");
+                if (!a) {
+                    return
+                }
+                var b = TDS.env.currentDomain;
+                Ext.Ajax.request({
+                    url: TDS.env.dataPath + a + "/voucher",
+                    jsonData: {
+                        currentDomain: b
+                    },
+                    method: "PUT",
+                    scope: this,
+                    callback: function(i, g, h) {
+                        c = c + h.responseText + ".rtf";
+                        var f = window.open(c, "Information Priview", "height=500,width=800,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no,status=yes");
+                        f.focus()
+                    }
+                })
+            }
+        }],
+        columnWidth: 0.6,
+        xtype: "panel",
+        height: 235,
+        border: true,
+        tpl: new Ext.XTemplate('<div style="height:175px; overflow-y: scroll;">', '<table border="0" width="100%">', '<tr><td width="14%"><span style="font-size:12px"><b>RLOC:</b></span></td><td width="20%"><font color="red"><span style="font-size:12px"> <b>{pnrCode}</b><span style="font-size:12px"></font></td>', 
+        	'<td  width="8%"><span style="font-size:12px"><b>Pay By:</b></span></td><td  width="20%"><div id="ttlDate#{divDataUri}"><span style="font-size:12px">{paybyDate}&nbsp;{depositDescription}</span></div></td>', "<td></td>", "</tr>", "</table>",
+        	 '<table class="x-tds-dataview" style="width: 100%;" border=1 cellpadding = 1 cellspacing=0  ><tr style="background-color: #d0def0;"><th style="padding: 2px; width: 14%;">Cruise Lines </th><th style="padding: 2px; width: 14%;">Ship </th><th style="padding: 2px; width: 14%;">Cruise Name </th><th style="padding: 2px; width: 14%;">Embark </th><th style="padding: 2px; width: 14%;">Date </th></tr><tr><td style="padding: 2px; width: 14%;">{cruiseline}</td><td style="padding: 2px; width: 14%;">{cruiseShips}</td><td style="padding: 2px; width: 14%;">{cruiseName}</td><td style="padding: 2px; width: 14%;">{embarkation}</td><td style="padding: 2px; width: 14%;">{dates}</td></tr></table><table class="x-tds-dataview" style="width: 100%;" border=1 cellpadding = 1 cellspacing=0  ><tr style="background-color: #d0def0;"><th style="padding: 2px; width: 12%;">Category </th><th style="padding: 2px; width: 14%;">Stateroom Type </th><th style="padding: 2px; width: 14%;">Stateroom Number </th><th style="padding: 2px; width: 8%;">Pax </th><th style="padding: 2px; width: 8%;">Deck </th><th style="padding: 2px; width: 8%;">Position </th><th style="padding: 2px; width: 10%;">Obstruct </th><th style="padding: 2px; width: 10%;">Status </th></tr>', 
+        	 "{rateBody}", '</table> <table class="x-tds-dataview" style="width: 100%;" border=1 cellpadding = 1 cellspacing=0  ><tr style="background-color: #d0def0;"><th style="padding: 2px; width: 14%;">Cruise Only</th><th style="padding: 2px; width: 14%;"> Extras</th><th style="padding: 2px; width: 14%;"> Package Price</th><th style="padding: 2px; width: 24%;">Total Price </th><th style="padding: 2px; width: 14%;">Markup </th><th style="padding: 2px; width: 14%;">Discount</th><th style="padding: 2px; width: 14%;">Commission</th></tr><tr><td style="padding: 2px; width: 14%;"><a href="#" class="another" onClick= ""> {pricingPriceCurrency}&nbsp;{cruisePackage} </a></td><td style="padding: 2px; width: 14%;">{extraTotal}</td><td style="padding: 2px; width: 14%;"> <a href="#" class="another" onClick= ""> {pricingPriceCurrency}&nbsp;{pricingPriceSell} </a></td><td style="padding: 2px; width: 24%;">{total}</td><td style="padding: 2px; width: 14%;">{markup}</td> <td style="padding: 2px; width: 14%;">{adjustmentDiscount}</td>   <td style="padding: 2px; width: 14%;">10 %</td></tr></table><table border="0" width="100%">', "</table>", "</div>", 
+        	 '<div> <table style="width: 100%;"><tr><td>{createdString}</td></tr></table></div>'),
+        listeners: {
+            render: function() {
+                var e = this;
+                var f = this.ownerCt.findParentByType("tabpanel");
+                var a = f.ownerCt;
+                var b = f.getDetail("offeringURI");
+                var c = f.getDetail("dateFrom");
+                var h = f.getDetail("dateTo");
+                var d = f.getDetail("priceCommission$");
+                var g = f.getDetail("adjustmentMarkup");
+                var i = f.getDetail("adjustmentDiscount");
+                e.getEl().on("click", function(j, k) {
+                    TDS.window.setWindow({
+                        title: "Cabin Pricing",
+                        interfaceURI: "pnr/offerings/cruise/cruisepricingPNR.js",
+                        buttonOK: false,
+                        buttonCancel: "Close",
+                        scope: e,
+                        data: {
+                            dateFrom: c,
+                            dateTo: h,
+                            priceCommission: d,
+                            adjustmentMarkup: g,
+                            discount: i
+                        },
+                        dataURI: {
+                            offeringURI: b
+                        },
+                        callback: {
+                            fn: function(m, n, l) {
+                                if (m) {}
+                            }
+                        }
+                    })
+                }, null, {
+                    delegate: "a"
+                })
+            }
+        }
+    }, {
+        columnWidth: 0.4,
+        xtype: "grid",
+        enableRowExpander: false,
+        sessionExpandedRows: false,
+        height: 160,
+        autoScroll: true,
+        border: false,
+        enableColumnHide: false,
+        enableColumnMove: false,
+        enableColumnResize: false,
+        enableHdMenu: false,
+        tbar: ["->", {
+            xtype: "button",
+            disabled: true,
+            text: "Cancel passenger",
+            handler: function() {
+                pGridPass = this.ownerCt.ownerCt;
+                var b = this.ownerCt.ownerCt.findParentByType("tabpanel");
+                dataURIPass = b.getDetail("dataURI");
+                Ext.Msg.show({
+                    title: "Confirmation",
+                    msg: "Are you sure, want to cancel passenger?",
+                    buttons: Ext.Msg.YESNO,
+                    fn: a,
+                    animEl: "elId",
+                    icon: Ext.MessageBox.QUESTION
+                });
+
+                function a(j) {
+                    if (j == "yes") {
+                        var e = pGridPass;
+                        var g = e.getSelections();
+                        var d = dataURIPass;
+                        var c = {};
+                        var f = new Array();
+                        for (var h = 0; h < g.length; h++) {
+                            f[h] = g[h].data.dataURI
+                        }
+                        c.passengerURIs = f;
+                        Ext.Ajax.request({
+                            url: TDS.env.dataPath + d + "/cancel",
+                            method: "PUT",
+                            jsonData: c,
+                            callback: function(n, i, l) {
+                                if (i) {
+                                    try {
+                                        Ext.Msg.alert("Status", "Changes saved successfully.");
+                                        var k = e.ownerCt.findParentByType("awesomegrid");
+                                        k.submitQuery(true)
+                                    } catch (m) {}
+                                }
+                            }
+                        })
+                    }
+                }
+            }
+        }],
+        store: new Ext.data.JsonStore({
+            url: "",
+            id: "dataURI",
+            fields: ["dataURI", "displayName", "code", "dateOfBirth", "addressString", "phoneNumber1", "emailAddress", "gender", "status", "type", "priceSell", "isCruisePackage"]
+        }),
+        sm: new Ext.grid.CheckboxSelectionModel(),
+        columns: [new Ext.grid.CheckboxSelectionModel(), {
+            header: "Pax",
+            dataIndex: "displayName",
+            width: 200,
+            sortable: true,
+            renderer: function(e, d, a, f, c, b) {
+                d.attr = 'ext:qtip= "Click to view details"';
+                return e
+            }
+        }, {
+            header: "Type",
+            dataIndex: "code",
+            width: 80
+        }, {
+            header: "Gender",
+            dataIndex: "gender",
+            renderer: TDS.util.Format.gender,
+            width: 100
+        }, {
+            header: "DOB",
+            dataIndex: "dateOfBirth",
+            width: 100,
+            renderer: TDS.util.Format.dateSpecialRenderer(TDS.env.dateBirthdayFormatDisplay)
+        }, {
+            header: "Age",
+            dataIndex: "dateOfBirth",
+            renderer: TDS.util.Format.age,
+            width: 80
+        }, {
+            header: "CR/PK",
+            dataIndex: "isCruisePackage",
+            width: 70,
+            fixed: true,
+            renderer: function(f, e, b, g, d, c, a) {
+                if (f) {
+                    return "PK"
+                } else {
+                    return "CR"
+                }
+            }
+        }, {
+            header: "Price",
+            dataIndex: "priceSell",
+            width: 40,
+            fixed: true,
+            renderer: function(f, e, b, g, d, c, a) {
+                return f != "" ? f.toFixed(2) : ""
+            }
+        }, {
+            header: "Status",
+            dataIndex: "status",
+            width: 100
+        }],
+        viewConfig: {
+            forceFit: true
+        },
+        id: "passengerGrid",
+        listeners: {
+            rowdblclick: function(c, f, d) {
+                var b = c.getStore().getAt(f);
+                var a = b.get("dataURI");
+                TDS.window.setWindow({
+                    buttonOK: false,
+                    title: "Passenger details",
+                    destinationDataURI: a,
+                    interfaceURI: "pnr/passenger/viewDetails.js",
+                    sourceDataURI: a
+                })
+            },
+            render: function() {
+                var c = this.ownerCt.ownerCt.findParentByType("ajaxpanel");
+                var b = c.rowRecordData.status;
+                var e = this.bottomToolbar;
+                this.getSelectionModel().on("rowselect", function() {
+                    if (this.ownerCt.getSelections().length > 0) {
+                        e.items.itemAt(1).setDisabled(false)
+                    }
+                }, e);
+                this.getSelectionModel().on("rowdeselect", function() {
+                    if (this.ownerCt.getSelections().length == 0) {
+                        e.items.itemAt(1).setDisabled(true)
+                    }
+                }, e);
+                this.getEl().swallowEvent(["columnmove", "columnresize", "headerclick", "click", "mouseout", "rowclick", "rowmousedown", "rowblclick", "cellblclick", "sortchange", "mouseup", "mousedown"]);
+                var d = this.ownerCt.findParentByType("tabpanel");
+                var a = d.getDetail("dataURI");
+                Ext.Ajax.request({
+                    url: TDS.env.dataPath + a + "/passengers/collection/concise",
+                    method: "GET",
+                    callback: function(j, p, g) {
+                        if (p) {
+                            var m = Ext.util.JSON.decode(g.responseText);
+                            var l = m[a + "/passengers"];
+                            if (typeof l == "undefined") {
+                                return
+                            }
+                            var n = [];
+                            for (var k = 0; k < l.length; k++) {
+                                m[l[k]].dataURI = l[k];
+                                n.push(m[l[k]])
+                            }
+                            var h = this;
+                            var f = h.store;
+                            f.loadData(n);
+                            h.getView().refresh()
+                        }
+                    },
+                    scope: this
+                })
+            }
+        }
+    }],
+    listeners: {
+        render: function() {
+            this.initInventory();
+            this.initOffering()
+        }
+    },
+    initInventory: function() {
+        var d = this.ownerCt.findParentByType("tabpanel");
+        var a = d.getDetail("dataURI");
+        var c;
+        Ext.Ajax.request({
+            url: TDS.env.dataPath + a + "/offerList",
+            method: "GET",
+            callback: function b(f, v, e) {;
+                var k = Ext.util.JSON.decode(e.responseText);
+                var j = k.offerList;
+                if (typeof j == "undefined") {
+                    return
+                }
+                var l = [];
+                for (var h = 0; h < j.length; h++) {
+                    k[j[h]].dataURI = j[h];
+                    l.push(k[j[h]])
+                }
+                c = l;
+                var q = this.ownerCt.findParentByType("tabpanel");
+                var g = q.getDetail("dataURI");
+                var n = q.getDetail("depositDescription");
+                var t = q.getDetail("paybyDate");
+                var m = TDS.util.Format.dateSpecial(t, TDS.env.dateFormatDisplay);
+                var p = g;
+                var u = new Array();
+                u = g.split("/");
+                Ext.Ajax.request({
+                    url: TDS.env.dataPath + g + "/inventories/collection",
+                    method: "GET",
+                    callback: function(al, ah, aj) {
+                        if (ah) {
+                            try {
+                                var ad = Ext.decode(aj.responseText)
+                            } catch (au) {}
+                            if (ad) {
+                                var S = 0,
+                                    af, am = [];
+                                var ab = 0;
+                                var ar = ad["component/inventory/collection"];
+                                var C = ar[g + "/inventories"];
+                                var ak = ad["component/rate/collection/"];
+                                var x = ak["component/rate/collection/list"];
+                                var M = ad["component/selectedCruiseRateCabins"];
+                                var T = "";
+                                var L = this.findByType("grid")[0].getStore().getTotalCount();
+                                var N = [];
+                                this.findByType("grid")[0].getStore().each(function(i) {
+                                    N.push(i.get("type"))
+                                });
+                                if (typeof M != "undefined" && M != "" && M.length > 0) {
+                                    for (var aq = 0; aq < M.length; aq++) {
+                                        var ac = M[aq];
+                                        var B = ad[ac]
+                                    }
+                                }
+                                q.setDetail("rateList", x);
+                                q.setDetail("rateList", x);
+                                var y = [];
+                                for (var aq = 0; aq < x.length; aq++) {
+                                    y.push(ak[x[aq]])
+                                }
+                                var E = this.ownerCt.ownerCt.findParentByType("ajaxpanel");
+                                var J = this.findParentByType("ajaxpanel").ownerCt.ownerCt.ownerCt.ownerCt.ownerCt.rowRecordData;
+                                var E = this.ownerCt.ownerCt.findParentByType("ajaxpanel");
+                                console.log(E.rowRecordData)
+                                var aa = E.rowRecordData.status;
+                                var V = this.findParentByType("tabpanel").items.items[0].findByType("button")[1];
+                                var Y = [{
+                                    nameString: "",
+                                    maximumOccupancy: "",
+                                    status: "",
+                                    obstruct: "",
+                                    dataURI: "",
+                                    expireDate: "",
+                                    position: "",
+                                    totalPax: "",
+                                    deckNo: "",
+                                    price: ""
+                                }];
+                                if (l.length != 0) {
+                                    V.config.rateList = l;
+                                    V.config.cPNRdataURI = j[0];
+                                    if (typeof(V.config.rateList[0].status) !== "undefined") {
+                                        V.config.statusOffer = l[0].status
+                                    }
+                                    if (typeof(V.config.rateList[0].offeringURI) === "undefined") {
+                                        V.config.offeringURI = p;
+                                        V.config.rateList[0].offeringURI = p;
+                                        V.config.rateList[0].maximumOccupancy = E.rowRecordData.passengersTotal
+                                    }
+                                    if (typeof(V.config.rateList[0].nameString) === "undefined") {
+                                        V.config.rateList[0].nameString = y[0].nameString
+                                    }
+                                } else {
+                                    V.config.rateList = Y;
+                                    V.config.rateList[0].nameString = y[0].nameString;
+                                    V.config.status = aa;
+                                    V.config.rateList[0].offeringURI = p;
+                                    V.config.offeringURI = p;
+                                    V.config.rateList[0].maximumOccupancy = E.rowRecordData.passengersTotal
+                                }
+                                var ai = new Array();
+                                ai = g.split("/");
+                                var U = "";
+                                this.rateData = [];
+                                var ax = C.length / x.length;
+                                var an = [];
+                                var W = "";
+                                var at = [];
+                                var R = 0;
+                                if (C.length > 0) {
+                                    for (var aq = 0; aq < C.length; aq++) {
+                                        var av = ar[C[aq]];
+                                        am[am.length] = TDS.util.Format.dateSpecial(av.componentPaybyDate, TDS.env.dateFormatDisplay);
+                                        W = av.pricingPriceCurrency;
+                                        if (at.indexOf(av.rateId) == -1) {
+                                            at[aq] = av.rateId;
+                                            an[R] = TDS.util.Price.calculateFixedGrossNettPrice({
+                                                pricingPriceCurrency: av.pricingPriceCurrency,
+                                                pricingPriceSell: av.pricingPriceSell,
+                                                pricingPriceCommission: av.pricingPriceCommission,
+                                                pricingPriceIsNett: av.pricingPriceIsNett
+                                            });
+                                            an[R].rateId = av.rateId;
+                                            an[R].quantity = av.quantity;
+                                            R++
+                                        }
+                                    }
+                                    var ag = "";
+                                    var Z = 0;
+                                    var F = "";
+                                    var ap = 0;
+                                    if (x.length > 0) {
+                                        for (var aq = 0; aq < x.length; aq++) {
+                                            var X = ak[x[aq]];
+                                            ap = X.extraTotal;
+                                            U = ak[x[aq]].tempBookedDate;
+                                            var ae = [];
+                                            var aw = X.groupName;
+                                            var A = "";
+                                            var O = "";
+                                            var z = 0;
+                                            var H = "";
+                                            ak[x[aq]].pricingPriceIsNett;
+                                            if (ak[x[aq]].pricingPriceIsNett) {
+                                                H = "Net"
+                                            } else {
+                                                H = "Gross"
+                                            }
+                                            F = ak[x[aq]].category;
+                                            var P = null;
+                                            for (var ao = 0; ao < an.length; ao++) {
+                                                if (an[ao].rateId == x[aq].substring(x[aq].lastIndexOf("/") + 1, x[aq].length)) {
+                                                    P = an[ao]
+                                                }
+                                            }
+                                            if (!P.priceIsNett) {
+                                                A = P.priceCommissionPercentage
+                                            } else {
+                                                O = P.priceCommission;
+                                                ab += (P.quantity * P.priceCommission)
+                                            }
+                                            Z += (P.quantity * P.priceSell);
+                                            var E = this.ownerCt.ownerCt.findParentByType("ajaxpanel");
+                                            var w = this.findParentByType("ajaxpanel").ownerCt.ownerCt.ownerCt.ownerCt.ownerCt.lastExpandedRowIdx;
+                                            var J = this.findParentByType("ajaxpanel").ownerCt.ownerCt.ownerCt.ownerCt.ownerCt.rowRecordData;
+											console.log(X);
+                                            ag += "<tr>";
+                                            ag += "<td>" + X.nameString + "</td>";
+                                            if (l.length == 0) {
+                                                ag += "<td></td>", ag += "<td></td>"
+                                            } else {
+                                                if (!l[0].accept) {
+                                                    ag += "<td></td>", ag += "<td></td>"
+                                                } else {
+                                                    if (typeof(l[0].stateRoomType) != "undefined") {
+                                                        ag += "<td>" + l[0].stateRoomType + "</td>"
+                                                    }
+                                                    if (typeof(l[0].stateRoomNumber) != "undefined") {
+                                                        ag += "<td>" + l[0].stateRoomNumber + "</td>"
+                                                    }
+                                                }
+                                            }
+                                            ag += "<td>" + X.maximumOccupancy + "</td>";
+                                            if (l.length == 0) {
+                                                ag += "<td></td>", ag += "<td></td>", ag += "<td></td>"
+                                            } else {
+                                                if (!l[0].accept) {
+                                                    ag += "<td></td>", ag += "<td></td>", ag += "<td></td>"
+                                                } else {
+                                                    if (typeof(l[0].deckNo) != "undefined") {
+                                                        ag += "<td>" + l[0].deckNo + "</td>"
+                                                    }
+                                                    if (typeof(l[0].position) != "undefined") {
+                                                        ag += "<td>" + l[0].position + "</td>"
+                                                    }
+                                                    if (typeof(l[0].obstruct) != "undefined") {
+                                                        if (l[0].obstruct == true) {
+                                                            ag += "<td>YES</td>"
+                                                        } else {
+                                                            ag += "<td>NO</td>"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            ag += "<td>" + aa + "</td>", ag += "</tr>"
+                                        }
+                                        ap = ap;
+                                        Z += ab;
+                                        Z += ap;
+                                        Z += z
+                                    }
+                                    if (am.length > 0) {
+                                        var I = am[0]
+                                    } else {
+                                        var I = am
+                                    }
+                                    q.setDetail("pricingPriceCurrency", W);
+                                    var G = 0;
+                                    if (E.rowRecordData.cruisePackagePrice == "") {} else {
+                                        G = E.rowRecordData.cruisePackagePrice
+                                    }
+                                    var K = E.rowRecordData["priceCommission$"];
+                                    var D = E.rowRecordData.adjustmentMarkup;
+                                    var Q = 0;
+                                    if (typeof(K) != "undefined") {
+                                        Q = (parseFloat(E.rowRecordData.cruisePackagePrice) * K) / 100
+                                    }
+                                    if (typeof(D) != "undefined") {
+                                        Q = D
+                                    }
+                                    var discount = 0;
+                                    var adjustmentDiscount = E.rowRecordData.adjustmentDiscount;
+                                    if (typeof(adjustmentDiscount) != "undefined") {
+                                        discount = adjustmentDiscount
+                                    }
+                                    this.inventoryData = {
+                                        rateBody: ag,
+                                        cabinsBody: T,
+                                        dataURI: g,
+                                        divDataUri: p,
+                                        numberOfNights: ax,
+                                        dates: I,
+                                        depositDescription: n,
+                                        paybyDate: m,
+                                        markup: TDS.util.Price.formatPrice(Q, W),
+                                        adjustmentDiscount: TDS.util.Price.formatPrice(adjustmentDiscount, W),
+                                        pnrCode: ai[1],
+                                        bookeddateDis: U,
+                                        total: TDS.util.Price.formatPrice(Number(E.rowRecordData.cruisePackagePrice) + (ap * (X.maximumOccupancy)), W),
+                                        priceCommission: A,
+                                        cruisePackage: E.rowRecordData.cruisePackage == 0 ? TDS.util.Price.formatPrice(parseFloat(G), W) : "",
+                                        pricingPriceSell: E.rowRecordData.cruisePackage > 0 ? TDS.util.Price.formatPrice(parseFloat(G) / X.maximumOccupancy, W) : "",
+                                        grossNett: H,
+                                        category: F,
+                                        price_commission: K + " %",
+                                        extraTotal: TDS.util.Price.formatPrice((ap * (X.maximumOccupancy)), W)
+                                    };
+                                    this.hasDetailsInventory = true;
+                                    if (this.isDetailsReady()) {
+                                        this.displayDetails()
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    scope: this
+                })
+            },
+            scope: this
+        })
+    },
+    initOffering: function() {
+        var b = this.ownerCt.findParentByType("tabpanel");
+        var a = b.getDetail("offeringURI");
+        Ext.Ajax.request({
+            url: TDS.env.dataPath + a,
+            method: "GET",
+            callback: function(h, c, f) {
+                if (c) {
+                    try {
+                        var d = Ext.decode(f.responseText);
+						console.log(d);
+						console.log(d.cruiseline);
+                    } catch (g) {}
+                    if (d) {
+                        b.initialConfig.config.cruiseName = d.cruiseName;
+                        this.offeringData = {
+                            website: d.primaryHref,
+                            addressString: d.addressString,
+                            cruiseShips: typeof (d.cruiseShipName) == "undefined" ? d.cruiseShipName : d.cruiseShips,
+                            cruiseline:  typeof (d.cruiseline) == "undefined" ? d.cruiseLineName :  d.cruiseline,
+                            cruiseName: typeof (d.name) == "undefined" ? d.name : d.cruiseName,
+                            embarkation: d.embarkation,
+                            locationFromString: d.locationFromString,
+                            locationToString: d.locationToString,
+                            duration: d.duration,
+                            departureDate: TDS.util.Format.dateSpecial(d.departureDate, TDS.env.dateFormatDisplay),
+                            arrivalDate: TDS.util.Format.dateSpecial(d.arrivalDate, TDS.env.dateFormatDisplay)
+                        };
+                        this.hasDetailsOffering = true;
+                        if (this.isDetailsReady()) {
+                            this.displayDetails()
+                        }
+                    }
+                }
+            },
+            scope: this
+        })
+    },
+    displayDetails: function() {
+        var h = this.ownerCt.findParentByType("tabpanel");
+        var b = Date.parseDate(h.getDetail("createdDate"), TDS.env.dateFormat);
+        var e = Date.parseDate(h.getDetail("updatedDate"), TDS.env.dateFormat);
+        var d = this.findParentByType("awesomegrid").findParentByType("pnrpanel").ownerCt.ownerCt.dataObj.pnrFrom;
+        var f = !Ext.isEmpty(d) ? "Created by Mobile on " : "Created on ";
+        var a = f + b.format(TDS.env.dateTimeFormatDisplay) + " by " + h.getDetail("createdByUserFullNameString") + ", modified on " + e.format(TDS.env.dateTimeFormatDisplay) + (h.getDetail("createdByUserFullNameString") == h.getDetail("updatedByUserFullNameString") ? "" : " by " + h.getDetail("updatedByUserFullNameString")) + ".";
+        var c = TDS.util.Price.calculateFixedGrossNettPrice({
+            pricingPriceCurrency: h.getDetail("pricingPriceCurrency"),
+            pricingPriceSell: h.getDetail("pricingPriceSell"),
+            pricingPriceCommission: h.getDetail("pricingPriceCommission"),
+            pricingPriceIsNett: h.getDetail("pricingPriceIsNett"),
+            dates: h.getDetail("dates")
+        });
+        var g = "";
+        this.getDetailsPanel().tpl.overwrite(this.getDetailsPanel().body, Ext.apply({
+            createdString: a
+        }, this.inventoryData, this.offeringData))
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
